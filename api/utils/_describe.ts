@@ -7,6 +7,8 @@ Rules:
 - One short sentence, roughly 15 to 25 words. Never more than two sentences, never line breaks.
 - First person, past tense, casual, like a quick note to self.
 - Stick strictly to the data. Never describe how the body, legs, or run felt, and never invent effort, mood, events, places, or people. Calling a number high, low, or a stretch hot is fine because the data shows it.
+- Each note stands on its own and is only about this run. Never compare it to or hint at other runs: no "again", "another", "back to", "instead of", "this time", streaks, or habits.
+- Only mention what the data includes. Never point out that something is missing or wasn't recorded.
 - The start time tells you the time of day. Only reference a time of day that matches it (a 19:00 start is an evening run, never a morning one), or leave it unmentioned. When you mention the clock time, use 12-hour format like 9:30pm.
 - Pick the two or three most notable facts, not all of them. Round numbers naturally.
 - Never use em dashes or en dashes. No exclamation marks, no emoji.
@@ -42,23 +44,28 @@ export async function generateRunDescription(
 ): Promise<string | null> {
   if (!process.env.AI_GATEWAY_API_KEY) return null;
 
+  // Missing values are left out rather than flagged, so a note never dwells on
+  // what wasn't recorded.
+  const pace = paceMinPerKm(run.distanceMeters, run.movingSeconds);
   const facts = [
     `date: ${run.startDate.slice(0, 10)}`,
     `start time (local): ${run.startDate.slice(11, 16)}`,
     `type: ${run.indoor ? "treadmill run (indoors)" : run.sportType}`,
     `distance: ${(run.distanceMeters / 1000).toFixed(1)} km`,
     `moving time: ${Math.round(run.movingSeconds / 60)} min`,
-    `pace: ${paceMinPerKm(run.distanceMeters, run.movingSeconds) ?? "unknown"}`,
-    `average heart rate: ${run.averageHeartRate == null ? "not recorded" : `${Math.round(run.averageHeartRate)} bpm`}`,
-    run.indoor
+    pace ? `pace: ${pace}` : null,
+    run.averageHeartRate == null
       ? null
-      : `temperature at start: ${run.temperature == null ? "unknown" : `${Math.round(run.temperature)}°C`}`,
+      : `average heart rate: ${Math.round(run.averageHeartRate)} bpm`,
+    run.indoor || run.temperature == null
+      ? null
+      : `temperature at start: ${Math.round(run.temperature)}°C`,
   ]
     .filter(Boolean)
     .join("\n");
 
   const variety = recentNotes.length
-    ? `\n\nNotes from the previous runs, newest first. Write this one with a clearly different opening and structure, and don't reuse their phrases:\n${recentNotes
+    ? `\n\nNotes from the previous runs, newest first, given only so you vary the wording. Write this one with a clearly different opening and structure, don't reuse their phrases, and don't reference those runs or their content:\n${recentNotes
         .slice(0, 3)
         .map((note) => `- ${note}`)
         .join("\n")}`
