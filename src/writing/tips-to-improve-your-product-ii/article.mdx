@@ -10,6 +10,9 @@ import { SubmitButton } from "./demos/submit-button";
 import { HeldOrder } from "./demos/held-order";
 import { EscapeLayers } from "./demos/escape-layers";
 import { SelectOnFocus } from "./demos/select-on-focus";
+import { ShiftClickRange } from "./demos/shift-click-range";
+import { DragOffset } from "./demos/drag-offset";
+import { PerModeColors } from "./demos/per-mode-colors";
 
 # Tips to improve your product II
 
@@ -58,3 +61,27 @@ Escape should close whatever sits on top, not everything behind it too. Open the
 When a field is clicked, people usually want to replace the value, not edit it. Click into W and type 320.
 
 <SelectOnFocus />
+
+<br />
+
+## Select a range with shift-click
+
+In a list with checkboxes, people expect shift-click to select everything in between, like in Finder or Gmail. Check Studio rent, then hold shift and click Team lunch.
+
+<ShiftClickRange />
+
+<br />
+
+## Drag things from where they were grabbed
+
+Whatever you pick up should stay under the cursor at the spot you grabbed it. Many drags center the item on the cursor instead, so it leaps on the first frame. Grab a card by its corner in both modes. The same goes for slider thumbs and scrollbars.
+
+<DragOffset />
+
+<br />
+
+## Give colors their own dark mode values
+
+A color picked on a white page rarely survives a dark one. These notes were colored for light mode, and in dark mode they glare like light boxes. Switch to light to see them as they were picked. Keep the hue, but give dark mode its own value, a little dimmer and more saturated.
+
+<PerModeColors />

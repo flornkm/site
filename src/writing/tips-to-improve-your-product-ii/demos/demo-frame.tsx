@@ -69,5 +69,19 @@ export const PANEL = "w-full max-w-[340px]";
 export const CARD = "w-full max-w-[340px] rounded-[20px] bg-surface p-4 smooth-shadow-ring-xs";
 export const TITLE = "text-[13px] leading-[18px] font-medium text-primary";
 export const SUBTITLE = "text-[13px] leading-[18px] text-tertiary";
+// A Mac-style keycap: a softly lit top with a highlight on its front lip, standing on a 2.5px side
+// wall. Pressed, it sinks into the wall, fast on the way down and a little slower back up. Goes
+// inside a `group/key` button that sets `data-pressed`, with 3px of bottom padding for the wall.
+export const KEYCAP = cn(
+  "flex h-8 min-w-12 items-end rounded-[8px] px-2 pb-[5px] text-[11px] leading-none font-medium text-secondary",
+  "bg-linear-to-b from-white to-[oklch(0.975_0_0)] dark:from-[oklch(0.33_0_0)] dark:to-[oklch(0.29_0_0)]",
+  "[--depth:2.5px] [--drop:oklch(0_0_0/0.1)] [--edge:oklch(0_0_0/0.13)] [--lip:oklch(1_0_0)] [--side:oklch(0.9_0_0)]",
+  "dark:[--drop:oklch(0_0_0/0.45)] dark:[--edge:oklch(0_0_0/0.7)] dark:[--lip:oklch(1_0_0/0.1)] dark:[--side:oklch(0.22_0_0)]",
+  "shadow-[inset_0_1px_0_var(--lip),0_0_0_0.5px_var(--edge),0_var(--depth)_0_var(--side),0_var(--depth)_0_0.5px_var(--edge),0_calc(var(--depth)+1.5px)_5px_-1px_var(--drop)]",
+  "transition-[translate,box-shadow] duration-150 ease-out",
+  "group-data-[pressed=true]/key:translate-y-[2px] group-data-[pressed=true]/key:duration-50 group-data-[pressed=true]/key:[--depth:0.5px]",
+);
+export const KEY_BUTTON =
+  "group/key cursor-pointer rounded-[8px] pb-[3px] outline-none focus-visible:ring-2 focus-visible:ring-default";
 export const GHOST_BUTTON =
   "h-7 shrink-0 cursor-pointer rounded-[8px] px-2.5 text-[13px] font-medium text-secondary outline-none transition-colors hover:bg-surface-tertiary hover:text-primary focus-visible:ring-2 focus-visible:ring-default";
