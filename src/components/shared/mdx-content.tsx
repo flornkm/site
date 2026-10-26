@@ -191,8 +191,10 @@ function Player({ src, poster, caption }: { src: string; poster?: string; captio
           )}
         />
       </div>
+      {/* The figure overhangs the column by 16px below lg; the caption insets by the same to sit
+          on the text's left edge, as under FigureImage. */}
       {caption && (
-        <figcaption className="mt-4 font-serif text-[11px] font-normal italic text-primary lg:mx-auto lg:max-w-[460px]">
+        <figcaption className="mt-4 font-serif text-[11px] font-normal italic text-primary max-lg:px-4 lg:mx-auto lg:max-w-[460px]">
           {caption}
         </figcaption>
       )}

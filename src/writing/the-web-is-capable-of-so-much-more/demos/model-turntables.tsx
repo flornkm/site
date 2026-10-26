@@ -194,7 +194,8 @@ export function ModelTurntables() {
           ))}
         </div>
       </div>
-      <figcaption className="mt-4 font-serif text-[11px] font-normal italic text-primary lg:mx-auto lg:max-w-[460px]">
+      {/* Inset by the figure's overhang below lg, so it starts where the text does. */}
+      <figcaption className="mt-4 font-serif text-[11px] font-normal italic text-primary max-lg:px-4 lg:mx-auto lg:max-w-[460px]">
         Fig 3: Three models straight from the game's code - built from primitives in TypeScript, no
         model files
       </figcaption>
