@@ -3,7 +3,7 @@
   "buildCommand": "bun run build",
   "outputDirectory": ".output",
   "functions": {
-    "api/runs/sync.ts": { "maxDuration": 60 }
+    "api/runs/sync.ts": { "maxDuration": 300 }
   },
   "crons": [{ "path": "/api/runs/sync", "schedule": "0 4 * * *" }],
   "redirects": [

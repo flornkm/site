@@ -1,6 +1,12 @@
 import { createHash } from "node:crypto";
 
-import { MIN_STYLIZE_METERS, stylizePath, type RoutePath } from "./_polyline.js";
+import {
+  MIN_STYLIZE_METERS,
+  smoothPath,
+  stylizePath,
+  type RoutePath,
+  type StylizedPath,
+} from "./_polyline.js";
 import type { StoredRun } from "./_strava.js";
 
 const STYLIZED_COUNTRY_CODES = new Set(["DE", "AE", "NL"]);
@@ -44,15 +50,23 @@ function isVisible(run: StoredRun): boolean {
 }
 
 function toPublicRun(run: StoredRun): StoredRun | null {
-  if (!run.path || !isStylized(run)) return run;
+  if (!run.path) return run;
 
-  const styled = stylizePath(
-    run.path,
-    run.distanceMeters,
-    seededRandom({ ...run, path: run.path }),
-  );
-  if (!styled) return null;
+  if (isStylized(run)) {
+    const styled = stylizePath(
+      run.path,
+      run.distanceMeters,
+      seededRandom({ ...run, path: run.path }),
+    );
+    return styled && withPath(run, styled);
+  }
 
+  // A route too short to resample keeps its raw line.
+  const smoothed = smoothPath(run.path, run.distanceMeters);
+  return smoothed ? withPath(run, smoothed) : run;
+}
+
+function withPath(run: StoredRun, styled: StylizedPath): StoredRun {
   const count = (styled.path.d.match(/[ML]/g) ?? []).length;
   return {
     ...run,

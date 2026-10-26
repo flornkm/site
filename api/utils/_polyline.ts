@@ -101,6 +101,17 @@ function chaikin(points: [number, number][]): [number, number][] {
   return out;
 }
 
+function turn(points: [number, number][], random: () => number): [number, number][] {
+  const angle = random() * Math.PI * 2;
+  const mirror = random() < 0.5 ? -1 : 1;
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return points.map(([x, y]): [number, number] => [
+    mirror * (x * cos - y * sin),
+    x * sin + y * cos,
+  ]);
+}
+
 export type StylizedPath = {
   path: RoutePath;
   // Fraction of the original route (by length) this one covers, for slicing the per-point
@@ -109,10 +120,26 @@ export type StylizedPath = {
   to: number;
 };
 
+// Trims the ends and turns the shape so the location can't be recognised.
 export function stylizePath(
   path: RoutePath,
   distanceMeters: number,
   random: () => number,
+): StylizedPath | null {
+  return reshapePath(path, distanceMeters, EDGE_TRIM_METERS, random);
+}
+
+// The same resampling and smoothing as stylizePath, keeping the whole route and its
+// orientation, so every line in the feed is drawn with the same softness.
+export function smoothPath(path: RoutePath, distanceMeters: number): StylizedPath | null {
+  return reshapePath(path, distanceMeters, 0, null);
+}
+
+function reshapePath(
+  path: RoutePath,
+  distanceMeters: number,
+  trimMeters: number,
+  random: (() => number) | null,
 ): StylizedPath | null {
   const points = parsePoints(path.d);
   if (points.length < 2) return null;
@@ -127,7 +154,7 @@ export function stylizePath(
   if (total <= 0 || distanceMeters <= 0) return null;
 
   const unitsPerMeter = total / distanceMeters;
-  const start = EDGE_TRIM_METERS * unitsPerMeter;
+  const start = trimMeters * unitsPerMeter;
   const end = total - start;
   const step = STYLIZE_STEP_METERS * unitsPerMeter;
   if (end - start < step * 2) return null;
@@ -137,14 +164,7 @@ export function stylizePath(
   styled.push(pointAt(points, cum, end));
   for (let pass = 0; pass < SMOOTHING_PASSES; pass++) styled = chaikin(styled);
 
-  const angle = random() * Math.PI * 2;
-  const mirror = random() < 0.5 ? -1 : 1;
-  const cos = Math.cos(angle);
-  const sin = Math.sin(angle);
-  const turned = styled.map(([x, y]): [number, number] => [
-    mirror * (x * cos - y * sin),
-    x * sin + y * cos,
-  ]);
+  const turned = random ? turn(styled, random) : styled;
 
   const minX = Math.min(...turned.map(([x]) => x));
   const minY = Math.min(...turned.map(([, y]) => y));
