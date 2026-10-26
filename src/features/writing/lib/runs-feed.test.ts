@@ -49,9 +49,19 @@ describe("publicRuns", () => {
     expect(publicRuns([run({ distanceMeters: 1000 })])).toEqual([]);
   });
 
-  test("travel runs pass through untouched", () => {
-    const travel = run({ countryCode: "IT", country: "Italy" });
-    expect(publicRuns([travel])).toEqual([travel]);
+  test("travel runs are smoothed but keep their whole shape and orientation", () => {
+    const [travel] = publicRuns([run({ countryCode: "IT", country: "Italy" })]);
+    expect(travel.path?.d).not.toBe(LOOP_D);
+    expect(travel.path!.w / travel.path!.h).toBeCloseTo(90 / 60, 1);
+    const points = (travel.path?.d.match(/[ML]/g) ?? []).length;
+    expect(travel.heartRates).toHaveLength(points);
+    expect(travel.heartRates?.[0]).toBe(140);
+    expect(travel.heartRates?.at(-1)).toBe(199);
+  });
+
+  test("a travel run too short to smooth keeps its raw line", () => {
+    const short = run({ countryCode: "IT", country: "Italy", distanceMeters: 200 });
+    expect(publicRuns([short])).toEqual([short]);
   });
 
   test("keeps indoor runs, drops other route-less and virtual runs", () => {
