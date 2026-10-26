@@ -46,6 +46,7 @@ export function FigureImage({
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <figure
+        data-no-isolate
         className={cn("not-prose mx-auto my-8 first:mt-0 last:mb-0", isDiagram && "max-w-[640px]")}
         style={width ? { maxWidth: width } : undefined}
       >
