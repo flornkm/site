@@ -3,22 +3,15 @@ import { IconCheckmark1Small } from "central-icons/IconCheckmark1Small";
 import { IconChevronBottom } from "central-icons/IconChevronBottom";
 import { IconCrossSmall } from "central-icons/IconCrossSmall";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { CARD, DemoFrame, GHOST_BUTTON, SUBTITLE, TITLE } from "./demo-frame";
+import { useEffect, useRef, useState } from "react";
+import { CARD, DemoFrame, GHOST_BUTTON, KEY_BUTTON, KEYCAP, SUBTITLE, TITLE } from "./demo-frame";
 
 /* A dialog with a menu open inside it. Escape peels one layer per press: the menu first, then the
-   dialog. The keycap under it presses with the real key (or can be clicked on touch), and the line
-   next to it says what the next press will close. */
+   dialog. The keycap under it presses with the real key (or can be clicked on touch). */
 
 const REPEATS = ["Never", "Every day", "Every week", "Every month"] as const;
 type Repeat = (typeof REPEATS)[number];
 type Layer = "menu" | "dialog" | "none";
-
-const HINTS: Record<Layer, string> = {
-  menu: "Closes the menu",
-  dialog: "Closes the dialog",
-  none: "Nothing left to close",
-};
 
 // Dark grey, not black, so it stays a button rather than a hole. Inverted in dark mode.
 const PRIMARY_BUTTON = cn(
@@ -38,17 +31,9 @@ export function EscapeLayers() {
   const trigger = useRef<HTMLButtonElement>(null);
   const reopen = useRef<HTMLButtonElement>(null);
   const titleInput = useRef<HTMLInputElement>(null);
-  const hints = useRef<Partial<Record<Layer, HTMLSpanElement | null>>>({});
-  const [hintWidth, setHintWidth] = useState<number>();
   const items = useRef<(HTMLButtonElement | null)[]>([]);
 
   const layer: Layer = menuOpen ? "menu" : open ? "dialog" : "none";
-
-  // The hint's box takes the width of the line it shows, so keycap and line stay centred together
-  // as a pair, and the width eases instead of jumping when the line changes.
-  useLayoutEffect(() => {
-    setHintWidth(hints.current[layer]?.offsetWidth);
-  }, [layer]);
 
   // The key can come up anywhere: the element that heard it may be gone by then.
   useEffect(() => {
@@ -263,7 +248,7 @@ export function EscapeLayers() {
             </AnimatePresence>
           </div>
 
-          <div className="relative mt-auto flex items-center gap-2.5">
+          <div className="relative mt-auto">
             <button
               type="button"
               aria-label="Press Escape"
@@ -274,44 +259,10 @@ export function EscapeLayers() {
               onPointerLeave={() => setPressed(false)}
               onClick={escape}
               data-pressed={pressed}
-              className="group cursor-pointer rounded-[7px] pb-[2px] outline-none focus-visible:ring-2 focus-visible:ring-default"
+              className={KEY_BUTTON}
             >
-              {/* The cap: a flat top and a 2px skirt underneath. Pressed, it sinks into the skirt,
-                  fast on the way down and a little slower back up. */}
-              <span
-                className={cn(
-                  "grid h-7 min-w-10 place-items-center rounded-[7px] bg-surface px-2 text-[11px] font-medium text-secondary",
-                  "shadow-[inset_0_0_0_1px_oklch(0_0_0/0.09),0_2px_0_oklch(0_0_0/0.07)] dark:bg-surface-tertiary dark:shadow-[inset_0_0_0_1px_oklch(1_0_0/0.08),0_2px_0_oklch(0_0_0/0.5)]",
-                  "transition-[translate,box-shadow] duration-150 ease-out",
-                  "group-data-[pressed=true]:translate-y-[1.5px] group-data-[pressed=true]:duration-50",
-                  "group-data-[pressed=true]:shadow-[inset_0_0_0_1px_oklch(0_0_0/0.09),0_0.5px_0_oklch(0_0_0/0.07)] dark:group-data-[pressed=true]:shadow-[inset_0_0_0_1px_oklch(1_0_0/0.08),0_0.5px_0_oklch(0_0_0/0.5)]",
-                )}
-              >
-                esc
-              </span>
+              <span className={KEYCAP}>esc</span>
             </button>
-            {/* Stacked in one cell; the blur blends the outgoing and incoming lines into one change
-                instead of two overlapping words. */}
-            <p
-              style={{ width: hintWidth }}
-              className="grid text-[12px] text-tertiary transition-[width] duration-200 ease-out"
-            >
-              {(Object.keys(HINTS) as Layer[]).map((key) => (
-                <span
-                  key={key}
-                  ref={(el) => {
-                    hints.current[key] = el;
-                  }}
-                  aria-hidden={key !== layer}
-                  className={cn(
-                    "col-start-1 row-start-1 w-max whitespace-nowrap transition-[opacity,filter] duration-200 ease-out",
-                    key !== layer && "opacity-0 blur-[2px]",
-                  )}
-                >
-                  {HINTS[key]}
-                </span>
-              ))}
-            </p>
           </div>
         </div>
       </MotionConfig>

@@ -183,13 +183,13 @@ export function HeldOrder() {
           Design sync
         </div>
 
-        {/* Black in light mode, so it reads as a layer over the page rather than a card on it. */}
-        <div className="relative mt-4 w-full rounded-[16px] bg-[oklch(0.2_0_0)] px-2 pt-3 pb-2 smooth-shadow-ring-md [--panel:oklch(0.2_0_0)] dark:bg-surface-tertiary dark:[--panel:var(--surface-tertiary)]">
-          {/* A light hairline inside the edge, the dark-surface ring; the tip carries it over its
-              curve and covers it along its base, so the outline runs unbroken around both. */}
+        <div className="relative mt-4 w-full rounded-[16px] bg-surface px-2 pt-3 pb-2 smooth-shadow-ring-md [--panel:var(--surface)] dark:bg-surface-tertiary dark:[--panel:var(--surface-tertiary)]">
+          {/* In dark mode, a light hairline inside the edge, the dark-surface ring; the tip carries it
+              over its curve and covers it along its base, so the outline runs unbroken around both.
+              In light mode the tip instead traces the shadow's outer ring over its curve. */}
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-[16px] shadow-[inset_0_0_0_1px_oklch(1_0_0/0.12)]"
+            className="pointer-events-none absolute inset-0 rounded-[16px] dark:shadow-[inset_0_0_0_1px_oklch(1_0_0/0.12)]"
           />
           <svg
             aria-hidden
@@ -198,15 +198,20 @@ export function HeldOrder() {
           >
             <path d="M0 7C3.5 7 5.6 0.6 8 0.6S12.5 7 16 7V8.5H0Z" className="fill-[var(--panel)]" />
             <path
+              d="M0 6C3.5 6 5.6 -0.4 8 -0.4S12.5 6 16 6"
+              className="fill-none stroke-black/5 dark:hidden"
+              strokeWidth="1"
+            />
+            <path
               d="M0 7.5C3.5 7.5 5.6 1.1 8 1.1S12.5 7.5 16 7.5"
-              className="fill-none stroke-[oklch(1_0_0/0.12)]"
+              className="hidden fill-none stroke-[oklch(1_0_0/0.12)] dark:block"
               strokeWidth="1"
             />
           </svg>
           <div className="flex items-baseline justify-between px-2">
-            <p className="text-[13px] leading-[18px] font-medium text-white">Design sync</p>
+            <p className="text-[13px] leading-[18px] font-medium text-primary">Design sync</p>
             {/* Swaps in place while the order is held, so nothing below it moves. */}
-            <p className="grid text-right text-[13px] leading-[18px] text-white/50 tabular-nums">
+            <p className="grid text-right text-[13px] leading-[18px] text-tertiary tabular-nums">
               <span
                 className={cn(
                   "col-start-1 row-start-1 transition-opacity duration-150",
@@ -235,7 +240,7 @@ export function HeldOrder() {
               onPointerEnter={() => setFrozen(liveOrder)}
               onPointerLeave={() => setFrozen(null)}
             >
-              {order.map((id) => {
+              {order.map((id, index) => {
                 const person = PEOPLE.find((p) => p.id === id)!;
                 const isMuted = muted.includes(id);
                 const isSpeaking = speaking === id && !isMuted;
@@ -243,13 +248,22 @@ export function HeldOrder() {
                   <motion.li
                     key={id}
                     layout="position"
-                    className="flex h-10 items-center gap-2.5 rounded-[10px] px-2"
+                    className="relative flex h-10 items-center gap-2.5 rounded-[10px] px-2"
                   >
+                    {/* Each row carries the line above it, so it travels with the row; whichever
+                          row is on top fades its line out. It starts where the name does. */}
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "pointer-events-none absolute top-0 right-2 left-[42px] h-px bg-black/[0.06] transition-opacity duration-200 dark:bg-white/[0.08]",
+                        index === 0 && "opacity-0",
+                      )}
+                    />
                     <ParticipantMark person={person} isSpeaking={isSpeaking} isMuted={isMuted} />
                     <span
                       className={cn(
                         "min-w-0 truncate text-[13px] leading-[18px]",
-                        isMuted ? "text-white/45" : "text-white",
+                        isMuted ? "text-quaternary" : "text-primary",
                       )}
                     >
                       {person.name}
@@ -274,8 +288,9 @@ export function HeldOrder() {
                       onClick={() => toggleMute(id)}
                       aria-pressed={isMuted}
                       className={cn(
-                        "-mr-2.5 ml-auto h-7 shrink-0 cursor-pointer rounded-[8px] px-2.5 text-[12px] font-medium text-white/60 outline-none transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-white/40",
-                        isMuted && "text-[oklch(0.72_0.17_25)] hover:text-[oklch(0.78_0.15_25)]",
+                        "-mr-2.5 ml-auto h-7 shrink-0 cursor-pointer rounded-[8px] px-2.5 text-[12px] font-medium text-tertiary outline-none transition-colors hover:bg-black/5 hover:text-primary focus-visible:ring-2 focus-visible:ring-black/15 dark:hover:bg-white/10 dark:focus-visible:ring-white/40",
+                        isMuted &&
+                          "text-destructive hover:text-destructive dark:text-[oklch(0.72_0.17_25)] dark:hover:text-[oklch(0.78_0.15_25)]",
                       )}
                     >
                       {isMuted ? "Muted" : "Mute"}
