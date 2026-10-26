@@ -1,3 +1,4 @@
+import { IsolateButton, IsolatedStage, useIsolateTarget } from "@/components/dev/isolate";
 import { CLAUDE_2010_ASSETS } from "@/features/experiments/components/claude-2010-assets";
 import { ExperimentDrawer } from "@/features/experiments/components/experiment-drawer";
 import { SLOP_NINJA_ASSETS } from "@/features/experiments/components/slop-ninja/assets";
@@ -353,6 +354,7 @@ export const Route = createFileRoute("/experiments")({
 function ExperimentsPage() {
   const { demo } = Route.useSearch();
   const navigate = Route.useNavigate();
+  const isolateTarget = useIsolateTarget();
 
   // Dialog state lives in the URL so deep-links and reloads restore it.
   const open = useCallback(
@@ -372,6 +374,20 @@ function ExperimentsPage() {
   const drawerExpRef = useRef<Experiment | null>(null);
   if (activeExperiment) drawerExpRef.current = activeExperiment;
   const drawerExperiment = drawerExpRef.current;
+
+  // Dev only: #isolate=<slug> shows the experiment alone at its dialog size, for recordings.
+  const isolated = EXPERIMENTS.find((e) => e.slug === isolateTarget);
+  if (import.meta.env.DEV && isolated) {
+    return (
+      <IsolatedStage>
+        <div className={cn("relative flex items-center justify-center", DIALOG_SIZE)}>
+          <Suspense fallback={null}>
+            <isolated.Component />
+          </Suspense>
+        </div>
+      </IsolatedStage>
+    );
+  }
 
   return (
     <MotionConfig transition={TRANSITION}>
@@ -599,6 +615,10 @@ function ExperimentTile({ experiment, isActive, morph, onOpen, onClose }: Experi
           >
             <IconCrossSmall className="size-4" />
           </motion.button>
+        )}
+
+        {import.meta.env.DEV && expanded && (
+          <IsolateButton id={experiment.slug} className="absolute top-3 right-10" />
         )}
       </motion.div>
     </li>
