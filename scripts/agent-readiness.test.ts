@@ -157,7 +157,8 @@ describe("MDX to markdown", () => {
   // inline in a sentence, is markup an agent has to step over.
   it.each(posts)("leaves no JSX in the twin of %s", (slug: string) => {
     const twin = markdownPages[`/writing/${slug}`]!.markdown;
-    const outsideFences = twin.replace(/^```[\s\S]*?^```/gm, "");
+    // Tags written as inline code (`<input type="number">`) are text, not leftover JSX.
+    const outsideFences = twin.replace(/^```[\s\S]*?^```/gm, "").replace(/`[^`\n]+`/g, "");
     // Footnotes turn into markdown footnotes and the copy button into nothing; neither is a
     // demo standing in for a note.
     const uncovered = componentsIn(slug).filter(
