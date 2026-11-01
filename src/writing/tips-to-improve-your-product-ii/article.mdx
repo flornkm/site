@@ -1,0 +1,148 @@
+---
+title: Tips to improve your product II
+description: More tips, and a few small details, that make the web a better, more fun place to be in.
+date: 2026-11-01
+type: note
+---
+
+import { NumberInputScroll } from "./demos/number-input-scroll";
+import { SubmitButton } from "./demos/submit-button";
+import { HeldOrder } from "./demos/held-order";
+import { EscapeLayers } from "./demos/escape-layers";
+import { SelectOnFocus } from "./demos/select-on-focus";
+import { ShiftClickRange } from "./demos/shift-click-range";
+import { DragOffset } from "./demos/drag-offset";
+import { PerModeColors } from "./demos/per-mode-colors";
+
+# Second edition of web design tips
+
+After I shared some lesser-known tips to improve products a few weeks ago, here's the second part of that. I believe that these are even less known.
+Find the first part [here](/writing/tips-to-improve-your-product).
+
+## Number inputs change when you scroll
+
+<NumberInputScroll />
+
+- `<input type="number">` gives you very little control, since the browser handles most of its behavior natively
+- Biggest issue: scrolling while hovering a focused input doesn’t scroll the page, it changes the number instead
+- Scroll direction decides whether the value goes up or down
+- Sometimes that’s handy, but for most numeric inputs today it makes the UX worse
+- Instead use `<input type="text" inputmode="decimal" />`
+
+<br />
+
+## Don't reorder a list under the cursor
+
+<HeldOrder />
+
+- Users want to interact with what they see
+- If lists change while you hover them, it's hard to predict where the target goes next
+- Disable automatic list sorting while hovering, like in the example, to improve the UX
+
+<br />
+
+## Don't disable the submit button
+
+<SubmitButton />
+
+- Disabled buttons don't tell users what the error is
+- Context is important, especially if agents start to use the web more and more
+- Make buttons clickable and show a clear error message instead
+
+<br />
+
+## Escape closes only the top layer
+
+<EscapeLayers />
+
+- If you have multiple layers (e.g. Dropdown > Dialog > Main surface), close them one by one
+- Make sure that the top layer is always the one auto-focused, and layers below shouldn't close when escaping
+
+<br />
+
+## Select the value when a field is clicked
+
+<SelectOnFocus />
+
+- In some editors, where values are inserted and changed often, it's better UX to select the value by default
+- This is especially important if inputs usually get fully replaced instead of edited
+- This depends heavily on the use case of an app
+
+<br />
+
+## Select a range with shift-click
+
+<ShiftClickRange />
+
+- In interactive lists, when holding the shift key while selecting, all rows in between should be selected as well
+- This resembles the native behavior of most operating systems
+- Most custom lists that are based on dynamic arrays forget about this behavior
+- Especially on longer lists, easy multi-selection is a key UX pattern
+
+<br />
+
+## Drag things from where they were grabbed
+
+<DragOffset />
+
+- Sudden item shifts are unnatural and, worst case, lead to wrong outcomes when dropping
+- To keep things predictable, the offset between the mouse cursor and the draggable element should be kept, starting from where it was grabbed
+- This keeps elements in the position they had when pressing down, no matter where the cursor starts dragging the element
+
+<br />
+
+## Give colors their own dark mode values
+
+<PerModeColors />
+
+- When defining the color system of a product, make sure to view colors in both light and dark mode
+- Colors need to be adjusted for dark environments when dark mode is available
+- Make sure to keep the same hue, but make the color a little dimmer and more saturated
+
+<br />
+
+## Cheat sheet
+
+```md
+Please check the UI details of our app:
+
+Number inputs
+
+- Don't use `type="number"`, scrolling over a focused one changes the value instead of the page
+- Use `<input type="text" inputmode="decimal" />` instead
+
+Live lists
+
+- Don't reorder a list while it's hovered
+- Pause automatic sorting on hover and apply the new order once the cursor leaves
+
+Submit buttons
+
+- Don't disable submit buttons
+- Keep them clickable and show a clear error message saying what's missing
+
+Escape
+
+- With multiple layers (e.g. Dropdown > Dialog > Main surface), Escape closes one layer at a time
+- The top layer is always the one focused, layers below stay open
+
+Select on click
+
+- In editors where values usually get replaced instead of edited, select the whole value on click
+- Only where it fits the use case
+
+Shift-click
+
+- In lists with checkboxes, shift-click selects all rows between the last click and this one
+- Match the native behavior of the operating system
+
+Dragging
+
+- Keep the offset between the cursor and the element from where it was grabbed
+- Never snap the element's center to the cursor
+
+Dark mode colors
+
+- Check every color in both light and dark mode
+- Keep the hue, but make dark mode values a little dimmer and more saturated
+```

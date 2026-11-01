@@ -1,4 +1,5 @@
 import { H1 } from "@/components/design-system/heading";
+import { DemoIsolation } from "@/components/dev/isolate";
 import { useMdxContent } from "@/components/shared/mdx-content";
 import { Link } from "@/components/ui/link";
 import { StayInTouch } from "@/features/writing/components/stay-in-touch";
@@ -222,7 +223,7 @@ function WritingDetailPage() {
             <HeaderDate type={item.type} date={item.date} newestRunDate={item.newestRunDate} />
           </header>
           <div className="pb-16 md:pb-24">
-            {content}
+            {import.meta.env.DEV ? <DemoIsolation>{content}</DemoIsolation> : content}
             <StayInTouch source={item.slug} />
           </div>
         </div>
