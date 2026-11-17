@@ -109,12 +109,16 @@ export function SkillGate({
     <div
       role="region"
       aria-labelledby={`skill-${skill}`}
-      className="not-prose my-12 rounded-[14px] bg-tertiary p-1.5 lg:mx-auto lg:max-w-[560px]"
+      className="not-prose relative my-12 rounded-[14px] bg-tertiary p-1.5 lg:mx-auto lg:max-w-[560px]"
     >
-      {/* On lg the card is wider than the 460px text measure, so the title starts on the text's
-          left edge: half the leftover width, minus the card's p-1.5 and the icon plus gap. */}
-      <div className="flex gap-2 px-2.5 pt-2.5 pb-4 lg:pl-[calc(50%-258px)]">
-        <Icon className="size-5 shrink-0 text-secondary opacity-50" aria-hidden />
+      {/* On lg the card is wider than the 460px text measure: the icon moves to the card's top-left
+          corner and the title starts on the text's left edge (half the leftover width, minus the
+          card's p-1.5). */}
+      <div className="flex gap-2 px-2.5 pt-2.5 pb-4 lg:pl-[calc(50%-230px)]">
+        <Icon
+          className="mt-px size-[18px] shrink-0 text-secondary opacity-50 lg:absolute lg:top-4 lg:left-4 lg:mt-0"
+          aria-hidden
+        />
         <div>
           <h2 id={`skill-${skill}`} className="text-sm leading-5 fw-medium text-primary">
             {title}
