@@ -156,29 +156,32 @@ export function BarChart({
           </>
         )}
       </div>
-      <table className="sr-only">
-        <caption>{label}</caption>
-        <thead>
-          <tr>
-            <th scope="col">Day</th>
-            {series.map((s) => (
-              <th key={s.key} scope="col">
-                {s.label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {buckets.map((b) => (
-            <tr key={b.date}>
-              <th scope="row">{b.date}</th>
+      {/* sr-only on a div: a table ignores the 1px height and would hang below the page. */}
+      <div className="sr-only">
+        <table>
+          <caption>{label}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Day</th>
               {series.map((s) => (
-                <td key={s.key}>{format(b.values[s.key] ?? 0)}</td>
+                <th key={s.key} scope="col">
+                  {s.label}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {buckets.map((b) => (
+              <tr key={b.date}>
+                <th scope="row">{b.date}</th>
+                {series.map((s) => (
+                  <td key={s.key}>{format(b.values[s.key] ?? 0)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </ChartRoot>
   );
 }

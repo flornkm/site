@@ -215,25 +215,28 @@ export function ScatterChart({
           </>
         )}
       </div>
-      <table className="sr-only">
-        <caption>{label}</caption>
-        <thead>
-          <tr>
-            <th scope="col">Point</th>
-            <th scope="col">{xLabel}</th>
-            <th scope="col">{yLabel}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {points.map((p) => (
-            <tr key={p.id}>
-              <th scope="row">{p.id}</th>
-              <td>{formatX(p.x)}</td>
-              <td>{formatY(p.y)}</td>
+      {/* sr-only on a div: a table ignores the 1px height and would hang below the page. */}
+      <div className="sr-only">
+        <table>
+          <caption>{label}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Point</th>
+              <th scope="col">{xLabel}</th>
+              <th scope="col">{yLabel}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {points.map((p) => (
+              <tr key={p.id}>
+                <th scope="row">{p.id}</th>
+                <td>{formatX(p.x)}</td>
+                <td>{formatY(p.y)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </ChartRoot>
   );
 }

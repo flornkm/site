@@ -303,30 +303,33 @@ export function LineChart({
           )}
         </div>
       </div>
-      <table className="sr-only">
-        <caption>{label}</caption>
-        <thead>
-          <tr>
-            <th scope="col">Day</th>
-            {series.map((s) => (
-              <th key={s.key} scope="col">
-                {s.label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {points.map((p) => (
-            <tr key={p.date}>
-              <th scope="row">{p.date}</th>
-              {series.map((s) => {
-                const value = p.values[s.key];
-                return <td key={s.key}>{typeof value === "number" ? format(value) : "–"}</td>;
-              })}
+      {/* sr-only on a div: a table ignores the 1px height and would hang below the page. */}
+      <div className="sr-only">
+        <table>
+          <caption>{label}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Day</th>
+              {series.map((s) => (
+                <th key={s.key} scope="col">
+                  {s.label}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {points.map((p) => (
+              <tr key={p.date}>
+                <th scope="row">{p.date}</th>
+                {series.map((s) => {
+                  const value = p.values[s.key];
+                  return <td key={s.key}>{typeof value === "number" ? format(value) : "–"}</td>;
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </ChartRoot>
   );
 }

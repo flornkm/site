@@ -176,21 +176,24 @@ export function HeatmapChart({
           </>
         )}
       </div>
-      <table className="sr-only">
-        <caption>{label}</caption>
-        <tbody>
-          {values.map((line, r) => (
-            <tr key={r}>
-              <th scope="row">{rows[r]}</th>
-              {line.map((v, c) => (
-                <td key={c}>
-                  {columnLabel(c)}: {format(v)}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* sr-only on a div: a table ignores the 1px height and would hang below the page. */}
+      <div className="sr-only">
+        <table>
+          <caption>{label}</caption>
+          <tbody>
+            {values.map((line, r) => (
+              <tr key={r}>
+                <th scope="row">{rows[r]}</th>
+                {line.map((v, c) => (
+                  <td key={c}>
+                    {columnLabel(c)}: {format(v)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </ChartRoot>
   );
 }
