@@ -113,8 +113,8 @@ export function SkillGate({
     >
       {/* On lg the card is wider than the 460px text measure, so the title starts on the text's
           left edge: half the leftover width, minus the card's p-1.5 and the icon plus gap. */}
-      <div className="flex gap-2 px-2.5 pt-2.5 pb-4 lg:pl-[calc(50%-254px)]">
-        <Icon className="mt-0.5 size-4 shrink-0 text-secondary" aria-hidden />
+      <div className="flex gap-2 px-2.5 pt-2.5 pb-4 lg:pl-[calc(50%-258px)]">
+        <Icon className="size-5 shrink-0 text-secondary opacity-50" aria-hidden />
         <div>
           <h2 id={`skill-${skill}`} className="text-sm leading-5 fw-medium text-primary">
             {title}
@@ -140,7 +140,8 @@ export function SkillGate({
           )}
         </div>
 
-        <div className="flex h-9 items-center border-t border-primary p-1">
+        {/* In dark mode border-primary is the same grey as the card, so it steps up a shade. */}
+        <div className="flex h-9 items-center border-t border-primary p-1 dark:border-secondary">
           <AnimatePresence mode="wait" initial={false}>
             {unlocked ? (
               <motion.div
