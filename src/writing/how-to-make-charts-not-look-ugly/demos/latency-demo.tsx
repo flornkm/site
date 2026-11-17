@@ -28,8 +28,8 @@ function makeRequests(): ScatterPoint[] {
   });
 }
 
-const REQUESTS = makeRequests();
-const MEDIAN = [...REQUESTS].sort((a, b) => a.y - b.y)[Math.floor(REQUESTS.length / 2)].y;
+export const REQUESTS = makeRequests();
+export const MEDIAN = [...REQUESTS].sort((a, b) => a.y - b.y)[Math.floor(REQUESTS.length / 2)].y;
 
 const tokens = (value: number) => (value >= 1000 ? `${Math.round(value / 1000)}k` : `${value}`);
 const seconds = (value: number) => `${Math.round(value * 10) / 10}s`;

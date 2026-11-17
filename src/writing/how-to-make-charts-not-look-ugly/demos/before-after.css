@@ -1,0 +1,160 @@
+/*
+  Each widget stacks its old and new card and wipes between them with two soft edges: --wipe-edge
+  brings the new card in from the left, --wipe-tail lets the old one follow it back in. The old
+  card's mask is the exact inverse of the new one's, so at every point their opacities add up to
+  one and neither shows through the other. Both rest positions sit just past an edge, so "gone"
+  can snap back to "old" without a visible change.
+*/
+@property --wipe-edge {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: -12%;
+}
+
+@property --wipe-tail {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: -12%;
+}
+
+.before-after-cell {
+  --wipe-soft: 10%;
+  /* A cooler emerald than the site's green-500, deep enough to carry white text in light mode. */
+  --improved: light-dark(oklch(0.6 0.15 158), oklch(0.68 0.16 158));
+  position: relative;
+  display: grid;
+  min-width: 0;
+}
+
+/* Unlayered, so it beats the cards' own col-span utilities inside the single-cell grid. */
+.before-after-cell > .before-after-layer,
+.before-after-layer > * {
+  grid-area: 1 / 1;
+}
+
+/* A mask clips everything outside its box, so the box reaches past the card to keep its shadow. */
+.before-after-layer {
+  display: grid;
+  padding: 16px;
+  margin: -16px;
+  --wipe-edge: -12%;
+  --wipe-tail: -12%;
+  -webkit-mask-image: var(--wipe-mask);
+  mask-image: var(--wipe-mask);
+}
+
+.before-after-new {
+  --wipe-mask: linear-gradient(
+    to right,
+    transparent calc(var(--wipe-tail) - var(--wipe-soft)),
+    #000 calc(var(--wipe-tail) + var(--wipe-soft)),
+    #000 calc(var(--wipe-edge) - var(--wipe-soft)),
+    transparent calc(var(--wipe-edge) + var(--wipe-soft))
+  );
+}
+
+.before-after-old {
+  --wipe-mask: linear-gradient(
+    to right,
+    #000 calc(var(--wipe-tail) - var(--wipe-soft)),
+    transparent calc(var(--wipe-tail) + var(--wipe-soft)),
+    transparent calc(var(--wipe-edge) - var(--wipe-soft)),
+    #000 calc(var(--wipe-edge) + var(--wipe-soft))
+  );
+}
+
+[data-phase="new"] > .before-after-layer,
+[data-phase="gone"] > .before-after-layer {
+  transition:
+    --wipe-edge var(--wipe-duration) cubic-bezier(0.65, 0, 0.35, 1),
+    --wipe-tail var(--wipe-duration) cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+[data-phase="new"] > .before-after-layer {
+  --wipe-edge: 112%;
+}
+
+[data-phase="gone"] > .before-after-layer {
+  --wipe-edge: 112%;
+  --wipe-tail: 112%;
+}
+
+/* Inside the card's padding, level with the title's first line. */
+.before-after-badge {
+  position: absolute;
+  z-index: 1;
+  top: 21px;
+  right: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 10px 2px 6px;
+  border-radius: 999px;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--improved);
+  opacity: 0;
+  transform: none;
+  pointer-events: none;
+}
+
+/* Badge and ring arrive together once the wipe has nearly reached the corner, then leave together. */
+[data-phase="new"] > .before-after-badge {
+  animation: before-after-badge 3.2s ease-out calc(var(--wipe-duration) * 0.72) both;
+}
+
+@keyframes before-after-badge {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  6%,
+  90% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* One pixel out, so it covers the card's own 1px grey hairline instead of sitting inside it. */
+.before-after-ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: 17px;
+  box-shadow: inset 0 0 0 2px var(--improved);
+  opacity: 0;
+  pointer-events: none;
+}
+
+[data-phase="new"] > .before-after-ring {
+  animation: before-after-ring 3.2s ease-out calc(var(--wipe-duration) * 0.72) both;
+}
+
+@keyframes before-after-ring {
+  0% {
+    opacity: 0;
+  }
+  6%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .before-after-layer {
+    transition: none !important;
+  }
+
+  .before-after-badge,
+  .before-after-ring {
+    display: none;
+  }
+}

@@ -19,16 +19,18 @@ function makeWeek() {
   );
 }
 
-const WEEK = makeWeek();
+export const WEEK = makeWeek();
 const PEAK = WEEK.flatMap((hours, day) => hours.map((value, hour) => ({ value, day, hour }))).sort(
   (a, b) => b.value - a.value,
 )[0];
 
 const hourLabel = (hour: number) => `${String(hour).padStart(2, "0")}:00`;
 
+export const BUSIEST = `${DAYS[PEAK.day]} ${hourLabel(PEAK.hour)}`;
+
 export function HoursDemo() {
   return (
-    <ChartCard title="Busiest hours" value={`${DAYS[PEAK.day]} ${hourLabel(PEAK.hour)}`}>
+    <ChartCard title="Busiest hours" value={BUSIEST}>
       <HeatmapChart
         rows={DAYS.map((day) => day[0])}
         values={WEEK}

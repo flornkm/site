@@ -1,0 +1,121 @@
+import { IconCheckmark1Small } from "central-icons/IconCheckmark1Small";
+import { useInView, useReducedMotion } from "motion/react";
+import { type ComponentType, type CSSProperties, useEffect, useRef, useState } from "react";
+import { cx } from "../charts/core/cx";
+import {
+  CheapFeaturesCard,
+  CheapHoursCard,
+  CheapLatencyCard,
+  CheapSpendCard,
+  CheapTokensCard,
+} from "./cheap-dashboard";
+import { Bento, SPAN } from "./chart-figure";
+import { FeaturesDemo } from "./features-demo";
+import { HoursDemo } from "./hours-demo";
+import { LatencyDemo } from "./latency-demo";
+import { SpendDemo } from "./spend-demo";
+import { TokensDemo } from "./tokens-demo";
+import "./before-after.css";
+
+type Phase = "old" | "new" | "gone";
+
+const WIDGETS: { span: keyof typeof SPAN; Old: ComponentType; New: ComponentType }[] = [
+  { span: "full", Old: CheapSpendCard, New: SpendDemo },
+  { span: "wide", Old: CheapTokensCard, New: TokensDemo },
+  { span: "narrow", Old: CheapFeaturesCard, New: FeaturesDemo },
+  { span: "half", Old: CheapLatencyCard, New: LatencyDemo },
+  { span: "half", Old: CheapHoursCard, New: HoursDemo },
+];
+
+const WIPE = 1800;
+const START = 800;
+const STAGGER = 650;
+const HOLD = 3000;
+const BACK_STAGGER = 250;
+
+const ALL_OLD: Phase[] = WIDGETS.map(() => "old");
+const ALL_NEW: Phase[] = WIDGETS.map(() => "new");
+
+function shuffledIndexes() {
+  const order = WIDGETS.map((_, i) => i);
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  return order;
+}
+
+// Timers only run while the figure is on screen. Coming back mid-loop first wipes whatever is
+// improved back out, so a widget never snaps between states.
+function useLoop(active: boolean) {
+  const [phases, setPhases] = useState(ALL_OLD);
+  const current = useRef(ALL_OLD);
+
+  useEffect(() => {
+    if (!active) return;
+    const timers: number[] = [];
+    const at = (ms: number, run: () => void) => timers.push(window.setTimeout(run, ms));
+    const commit = (next: Phase[]) => {
+      current.current = next;
+      setPhases(next);
+    };
+    const set = (index: number, phase: Phase) =>
+      commit(current.current.map((value, i) => (i === index ? phase : value)));
+
+    function wipeBack(from: number, stagger: number) {
+      shuffledIndexes().forEach((index, k) =>
+        at(from + k * stagger, () => {
+          if (current.current[index] !== "old") set(index, "gone");
+        }),
+      );
+      const done = from + (WIDGETS.length - 1) * stagger + WIPE;
+      at(done, () => commit(ALL_OLD));
+      return done;
+    }
+
+    function cycle(from: number) {
+      const start = from + START;
+      shuffledIndexes().forEach((index, k) => at(start + k * STAGGER, () => set(index, "new")));
+      const improved = start + (WIDGETS.length - 1) * STAGGER + WIPE + HOLD;
+      at(wipeBack(improved, BACK_STAGGER), () => {
+        timers.length = 0;
+        cycle(0);
+      });
+    }
+
+    cycle(current.current.some((phase) => phase !== "old") ? wipeBack(0, 0) : 0);
+    return () => timers.forEach(clearTimeout);
+  }, [active]);
+
+  return phases;
+}
+
+export function BeforeAfter() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { amount: 0.3 });
+  const reduceMotion = useReducedMotion();
+  const looping = useLoop(inView && !reduceMotion);
+  const phases = reduceMotion ? ALL_NEW : looping;
+
+  return (
+    <div ref={ref} style={{ "--wipe-duration": `${WIPE}ms` } as CSSProperties}>
+      <Bento>
+        {WIDGETS.map(({ span, Old, New }, i) => (
+          <div key={i} className={cx("before-after-cell", SPAN[span])} data-phase={phases[i]}>
+            <div className="before-after-layer before-after-old" aria-hidden inert>
+              <Old />
+            </div>
+            <div className="before-after-layer before-after-new">
+              <New />
+            </div>
+            <span className="before-after-ring" aria-hidden />
+            <span className="before-after-badge font-pretendard">
+              <IconCheckmark1Small className="size-4 shrink-0" />
+              Improved
+            </span>
+          </div>
+        ))}
+      </Bento>
+    </div>
+  );
+}

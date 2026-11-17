@@ -18,7 +18,7 @@ export function Bento({ children }: { children: ReactNode }) {
   );
 }
 
-const SPAN = {
+export const SPAN = {
   full: "lg:col-span-6",
   wide: "lg:col-span-4",
   half: "lg:col-span-3",

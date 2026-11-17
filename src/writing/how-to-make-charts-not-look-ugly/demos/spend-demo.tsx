@@ -22,9 +22,9 @@ const OCTOBER = cumulative(
     return weekday === 0 || weekday === 6 ? 5 : 11 + (i % 3);
   }),
 );
-const NOW = cumulative(NOVEMBER);
+export const NOW = cumulative(NOVEMBER);
 
-const POINTS: LinePoint[] = OCTOBER.map((before, i) => ({
+export const POINTS: LinePoint[] = OCTOBER.map((before, i) => ({
   date: `2026-11-${String(i + 1).padStart(2, "0")}`,
   values: { now: NOW[i] ?? null, before },
 }));

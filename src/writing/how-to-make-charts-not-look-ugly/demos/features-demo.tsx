@@ -3,7 +3,7 @@ import { ChartCard } from "./chart-figure";
 import { dollars } from "./models";
 
 // November so far, split by the feature that made the call. Adds up to the line chart's $162.
-const SLICES: Slice[] = [
+export const SLICES: Slice[] = [
   { id: "chat", label: "Chat", value: 58 },
   { id: "review", label: "Code review", value: 41 },
   { id: "agents", label: "Agents", value: 33 },

@@ -20,12 +20,12 @@ const ROWS: [string, number, number, number][] = [
   ["2026-11-11", 2.4, 5.0, 3.4],
 ];
 
-const BUCKETS: Bucket[] = ROWS.map(([date, opus, sonnet, haiku]) => ({
+export const BUCKETS: Bucket[] = ROWS.map(([date, opus, sonnet, haiku]) => ({
   date,
   values: { opus, sonnet, haiku },
 }));
 
-const TOTAL = `${Math.round(ROWS.reduce((sum, [, a, b, c]) => sum + a + b + c, 0))}M`;
+export const TOTAL = `${Math.round(ROWS.reduce((sum, [, a, b, c]) => sum + a + b + c, 0))}M`;
 
 const tokens = (value: number) => `${value.toFixed(1)}M`;
 const axisTokens = (value: number) => `${value}M`;
