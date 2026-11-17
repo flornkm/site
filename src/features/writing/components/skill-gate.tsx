@@ -5,10 +5,11 @@ import { IconClipboard2 } from "central-icons/IconClipboard2";
 import { IconLock } from "central-icons/IconLock";
 import { IconUnlocked } from "central-icons/IconUnlocked";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { cn } from "@/lib/utils";
 import { useCallback, useState, useSyncExternalStore, type FormEvent } from "react";
 
 type Status = "idle" | "sending" | "error";
+
+const LOCKED_BARS = [28, 56, 26, 84, 40, 48];
 
 const SWAP = {
   initial: { opacity: 0, filter: "blur(2px)" },
@@ -136,10 +137,7 @@ export function SkillGate({
   const [restRef, floating] = useFloating();
   const reduceMotion = useReducedMotion();
   const Icon = unlocked ? IconUnlocked : IconLock;
-  const commandClass = cn(
-    "min-w-0 flex-1 truncate px-1.5 font-mono text-xs",
-    unlocked ? "text-primary select-all" : "text-tertiary blur-[3px] select-none",
-  );
+  const commandClass = "min-w-0 flex-1 truncate px-1.5 font-mono text-xs text-primary select-all";
 
   return (
     <>
@@ -181,9 +179,24 @@ export function SkillGate({
 
         <div className="rounded-lg bg-surface smooth-shadow-ring-xs outline outline-transparent outline-offset-0 transition-[outline-color,outline-offset,outline-width] duration-150 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-blue-300 dark:bg-surface-tertiary">
           <div className="flex h-9 items-center gap-1 p-1">
-            <span aria-hidden={!unlocked || undefined} className={commandClass}>
-              {command}
-            </span>
+            {unlocked ? (
+              <span className={commandClass}>{command}</span>
+            ) : (
+              // Abstract bars in the shape of a command, so the real one isn't on the page (or in
+              // its HTML) until the email is in.
+              <span
+                aria-hidden
+                className="flex min-w-0 flex-1 items-center gap-1.5 px-1.5 blur-[2px]"
+              >
+                {LOCKED_BARS.map((width, i) => (
+                  <span
+                    key={i}
+                    className="h-2 shrink-0 rounded-full bg-quaternary dark:bg-(--border-secondary)"
+                    style={{ width }}
+                  />
+                ))}
+              </span>
+            )}
             {unlocked && (
               <Button
                 size="sm"
