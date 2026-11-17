@@ -92,8 +92,8 @@
 }
 
 .bp-text {
-  fill: currentColor;
-  opacity: 0.22;
+  /* Filled by the shimmer gradient; its stops carry the transparency. */
+  opacity: 1;
 }
 
 .bp-readout text,

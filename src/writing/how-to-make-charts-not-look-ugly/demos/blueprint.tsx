@@ -113,6 +113,28 @@ export function Blueprint({ data, build }: { data: BlueprintData; build: number 
         <pattern id={`${id}-grid`} width="12" height="12" patternUnits="userSpaceOnUse">
           <circle cx="6" cy="6" r="0.7" fill="currentColor" />
         </pattern>
+        {/* One bright band sweeping across the whole card, so every text bar shimmers in step,
+            like a single light passing over the drawing rather than each bar on its own. */}
+        <linearGradient
+          id={`${id}-shimmer`}
+          gradientUnits="userSpaceOnUse"
+          x1={-w * 0.45}
+          y1="0"
+          x2="0"
+          y2={h * 0.25}
+        >
+          <stop offset="0" stopColor="currentColor" stopOpacity="0.16" />
+          <stop offset="0.5" stopColor="currentColor" stopOpacity="0.5" />
+          <stop offset="1" stopColor="currentColor" stopOpacity="0.16" />
+          <animateTransform
+            attributeName="gradientTransform"
+            type="translate"
+            from="0 0"
+            to={`${w * 1.45} 0`}
+            dur="1.1s"
+            repeatCount="indefinite"
+          />
+        </linearGradient>
       </defs>
       <rect width={w} height={h} rx="16" fill={`url(#${id}-grid)`} className="bp-grid" />
       <rect
@@ -155,6 +177,7 @@ export function Blueprint({ data, build }: { data: BlueprintData; build: number 
             width={part.w}
             height={part.h * 0.56}
             rx="2"
+            fill={`url(#${id}-shimmer)`}
             className="bp-part bp-text"
             style={delay(part.y)}
           />
