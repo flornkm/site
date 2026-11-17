@@ -98,12 +98,42 @@ export function measureBlueprint(cell: HTMLElement, layer: HTMLElement): Bluepri
 const r1 = (n: number) => Math.round(n * 10) / 10;
 const GRID = 16;
 
-// Vertical lines from the content's left edge to its right edge, the spacing stretched from 16px
-// just enough that a line lands on both edges. Drawn at half-pixels so 1px lines stay crisp.
-function gridLines(left: number, right: number) {
-  const columns = Math.max(1, Math.round((right - left) / GRID));
-  const step = (right - left) / columns;
-  return Array.from({ length: columns + 1 }, (_, i) => Math.round(left + i * step) + 0.5);
+// Boxes that overlap horizontally share a column: a heatmap's cells, a stack's segments.
+function columnSpans(parts: readonly Part[]) {
+  const boxes = parts
+    .filter((p): p is Extract<Part, { kind: "box" }> => p.kind === "box")
+    .sort((a, b) => a.x - b.x);
+  const spans: { start: number; end: number }[] = [];
+  for (const b of boxes) {
+    const last = spans[spans.length - 1];
+    if (last && b.x < last.end - 1) last.end = Math.max(last.end, b.x + b.w);
+    else spans.push({ start: b.x, end: b.x + b.w });
+  }
+  return spans;
+}
+
+// Vertical lines that follow the card's own structure. With columns (heatmap cells, bars) they
+// run along the outer edges and through every gap between columns; otherwise they divide the
+// content box evenly at about 16px, stretched so a line lands on both edges. The content edges
+// always get a line too. Half-pixel positions keep 1px lines crisp.
+function gridLines(parts: readonly Part[], content: { left: number; right: number }) {
+  const spans = columnSpans(parts);
+  let lines: number[];
+  if (spans.length >= 3) {
+    lines = [
+      spans[0].start,
+      ...spans.slice(1).map((s, i) => (spans[i].end + s.start) / 2),
+      spans[spans.length - 1].end,
+    ];
+  } else {
+    const columns = Math.max(1, Math.round((content.right - content.left) / GRID));
+    const step = (content.right - content.left) / columns;
+    lines = Array.from({ length: columns + 1 }, (_, i) => content.left + i * step);
+  }
+  for (const edge of [content.left, content.right]) {
+    if (lines.every((x) => Math.abs(x - edge) > 8)) lines.push(edge);
+  }
+  return lines.map((x) => Math.round(x) + 0.5);
 }
 const dotsPath = (points: readonly Point[]) =>
   points.map(([x, y]) => `M${r1(x)},${r1(y)}h0`).join("");
@@ -159,7 +189,7 @@ export function Blueprint({ data, build }: { data: BlueprintData; build: number 
         </linearGradient>
       </defs>
       <path
-        d={gridLines(data.content.left, data.content.right)
+        d={gridLines(parts, data.content)
           .map((x) => `M${x},0V${h}`)
           .join("")}
         className="bp-grid"
