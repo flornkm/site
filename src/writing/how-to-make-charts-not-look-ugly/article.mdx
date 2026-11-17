@@ -1,0 +1,32 @@
+---
+title: How to make charts not look ugly
+description: Draft.
+date: 2026-11-17
+type: note
+cta: inline
+---
+
+import { SkillGate } from "@/features/writing/components/skill-gate";
+import { BeforeAfter } from "./demos/before-after";
+
+# How to make charts not look ugly
+
+Charts are everywhere. If you have a product that shows analytics of any kind to its users, or shares information such as research findings, charts are the way to go. I always found that most chart libraries gave too few options for customization.
+
+Especially when it comes to more unique chart types, or more advanced brands that require their charts to show tooltips etc. in a special way.
+
+<BeforeAfter caption="Fig 1: The same dashboard and data, each widget improved with the charts skill" />
+
+Whenever I had this problem, I started building charts myself. I found that agents often implement "custom chart solutions" with a canvas, which I don't think is the right approach. SVG can do much more than most people think, and if the data is known ahead of time, it allows you to fully build out charts without having to worry about parts of them not looking on-brand.
+
+So I wrote down everything I do, and turned it into a skill your agent can follow. It builds charts like the ones above in plain SVG, works with any brand, and handles the labels that usually break on small screens.
+
+<SkillGate
+  skill="charts"
+  title="Get the charts skill"
+  description="The skill and kit I use to build charts like these with agents."
+  prompt="Leave your email to unlock it."
+  command="npx skills@latest add flornkm/skills --skill charts"
+  downloadUrl="https://github.com/flornkm/skills/releases/download/zips/charts.zip"
+  source="how-to-make-charts-not-look-ugly"
+/>

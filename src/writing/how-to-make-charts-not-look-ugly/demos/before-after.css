@@ -1,0 +1,155 @@
+/*
+  Each widget stacks its default card, its improved card and a technical drawing traced from the
+  improved one. "build" fades the default out and lets the drawing draw itself top to bottom;
+  "new" fades the improved card in under it and the drawing away. Both cards share the same shell,
+  so the swap reads as the same card being rebuilt.
+*/
+.before-after-cell {
+  position: relative;
+  display: grid;
+  min-width: 0;
+}
+
+/* Unlayered, so it beats the cards' own col-span utilities inside the single-cell grid. */
+.before-after-cell > .before-after-layer,
+.before-after-layer > * {
+  grid-area: 1 / 1;
+}
+
+.before-after-layer {
+  display: grid;
+  transition:
+    opacity var(--fade) ease-out,
+    filter var(--fade) ease-out;
+}
+
+[data-phase="old"] > .before-after-new,
+[data-phase="build"] > .before-after-new,
+[data-phase="gone"] > .before-after-new {
+  opacity: 0;
+}
+
+[data-phase="build"] > .before-after-old,
+[data-phase="new"] > .before-after-old {
+  opacity: 0;
+  filter: blur(3px);
+}
+
+[data-phase="build"] > .before-after-old {
+  transition-duration: 280ms;
+}
+
+.before-after-blueprint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: visible;
+  pointer-events: none;
+  color: var(--text-tertiary, currentColor);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
+[data-phase="build"] > .before-after-blueprint {
+  opacity: 1;
+}
+
+[data-phase="new"] > .before-after-blueprint {
+  transition-duration: 600ms;
+}
+
+.bp-grid {
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.18;
+}
+
+.bp-frame,
+.bp-box,
+.bp-leader {
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-dasharray: 0 3.5;
+}
+
+.bp-box {
+  fill: none;
+}
+
+.bp-corner {
+  fill: var(--chart-backdrop, var(--surface, Canvas));
+  stroke: currentColor;
+  stroke-width: 1;
+}
+
+.bp-dots {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.bp-text {
+  /* Filled by the shimmer gradient; its stops carry the transparency. */
+  opacity: 1;
+}
+
+.bp-readout text,
+.bp-label {
+  fill: currentColor;
+}
+
+.bp-part {
+  animation: bp-in 260ms ease-out both;
+}
+
+.bp-text.bp-part {
+  animation-name: bp-in-text;
+}
+
+@keyframes bp-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+@keyframes bp-in-text {
+  from {
+    opacity: 0;
+  }
+}
+
+/* A scan line that runs down the card once while the parts appear. */
+.bp-scan {
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-dasharray: 0 3;
+  stroke-linecap: round;
+  animation: bp-scan calc(var(--build) * 0.6) cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes bp-scan {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .before-after-layer {
+    transition: none !important;
+  }
+
+  .before-after-blueprint {
+    display: none;
+  }
+}
