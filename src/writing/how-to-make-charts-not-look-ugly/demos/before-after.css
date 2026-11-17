@@ -5,8 +5,6 @@
   so the swap reads as the same card being rebuilt.
 */
 .before-after-cell {
-  /* A cooler emerald than the site's green-500, deep enough to carry white text in light mode. */
-  --improved: light-dark(oklch(0.6 0.15 158), oklch(0.68 0.16 158));
   position: relative;
   display: grid;
   min-width: 0;
@@ -144,82 +142,11 @@
   }
 }
 
-/* Tucked into the top-right corner, inside the card. */
-.before-after-badge {
-  position: absolute;
-  z-index: 1;
-  top: 12px;
-  right: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 2px 10px 2px 6px;
-  border-radius: 999px;
-  font-size: 13px;
-  line-height: 18px;
-  font-weight: 500;
-  color: #fff;
-  background: var(--improved);
-  opacity: 0;
-  transform: none;
-  pointer-events: none;
-}
-
-/* Badge and ring arrive together just after the improved card fades in, then leave together. */
-[data-phase="new"] > .before-after-badge {
-  animation: before-after-badge 3.2s ease-out 200ms both;
-}
-
-@keyframes before-after-badge {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  6%,
-  90% {
-    opacity: 1;
-    transform: none;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-}
-
-/* One pixel out, so it covers the card's own 1px grey hairline instead of sitting inside it. */
-.before-after-ring {
-  position: absolute;
-  inset: -1px;
-  border-radius: 17px;
-  box-shadow: inset 0 0 0 2px var(--improved);
-  opacity: 0;
-  pointer-events: none;
-}
-
-[data-phase="new"] > .before-after-ring {
-  animation: before-after-ring 3.2s ease-out 200ms both;
-}
-
-@keyframes before-after-ring {
-  0% {
-    opacity: 0;
-  }
-  6%,
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .before-after-layer {
     transition: none !important;
   }
 
-  .before-after-badge,
-  .before-after-ring,
   .before-after-blueprint {
     display: none;
   }

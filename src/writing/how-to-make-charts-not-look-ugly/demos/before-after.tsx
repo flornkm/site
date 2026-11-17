@@ -1,4 +1,3 @@
-import { IconCheckmark1Small } from "central-icons/IconCheckmark1Small";
 import { useInView, useReducedMotion } from "motion/react";
 import {
   type ComponentType,
@@ -139,11 +138,6 @@ function Cell({
         <New />
       </div>
       {blueprint && <Blueprint key={blueprint.id} data={blueprint} build={BUILD} />}
-      <span className="before-after-ring" aria-hidden />
-      <span className="before-after-badge font-pretendard">
-        <IconCheckmark1Small className="size-4 shrink-0" />
-        Improved
-      </span>
     </div>
   );
 }
