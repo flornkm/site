@@ -106,7 +106,7 @@ export function SkillGate({
   return (
     <section
       aria-labelledby={`skill-${skill}`}
-      className="not-prose my-12 rounded-[14px] bg-tertiary p-1.5"
+      className="not-prose my-12 rounded-[14px] bg-tertiary p-1.5 lg:mx-auto lg:max-w-[560px]"
     >
       <div className="flex gap-2 px-2.5 pt-2.5 pb-4">
         <Icon className="mt-0.5 size-4 shrink-0 text-secondary" aria-hidden />

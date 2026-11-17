@@ -79,12 +79,12 @@
   --wipe-tail: 112%;
 }
 
-/* Inside the card's padding, level with the title's first line. */
+/* Tucked into the top-right corner, inside the card. */
 .before-after-badge {
   position: absolute;
   z-index: 1;
-  top: 21px;
-  right: 20px;
+  top: 12px;
+  right: 12px;
   display: inline-flex;
   align-items: center;
   gap: 2px;

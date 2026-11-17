@@ -56,6 +56,8 @@ function getWritingItem(slug: string) {
     // Live posts (e.g. runs) carry no frontmatter date — their date streams in via newestRunDate.
     date: typeof item.date === "string" ? item.date : "",
     collaborators,
+    // `cta: inline` in the frontmatter: the post carries its own sign-up, so skip the global one.
+    inlineCta: item.cta === "inline",
   };
 }
 
@@ -224,7 +226,7 @@ function WritingDetailPage() {
           </header>
           <div className="pb-16 md:pb-24">
             {import.meta.env.DEV ? <DemoIsolation>{content}</DemoIsolation> : content}
-            <StayInTouch source={item.slug} />
+            {!item.inlineCta && <StayInTouch source={item.slug} />}
           </div>
         </div>
       </div>
