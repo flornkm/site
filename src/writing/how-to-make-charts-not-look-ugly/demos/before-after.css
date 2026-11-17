@@ -1,24 +1,10 @@
 /*
-  Each widget stacks its old and new card and wipes between them with two soft edges: --wipe-edge
-  brings the new card in from the left, --wipe-tail lets the old one follow it back in. The old
-  card's mask is the exact inverse of the new one's, so at every point their opacities add up to
-  one and neither shows through the other. Both rest positions sit just past an edge, so "gone"
-  can snap back to "old" without a visible change.
+  Each widget stacks its default card, its improved card and a technical drawing traced from the
+  improved one. "build" fades the default out and lets the drawing draw itself top to bottom;
+  "new" fades the improved card in under it and the drawing away. Both cards share the same shell,
+  so the swap reads as the same card being rebuilt.
 */
-@property --wipe-edge {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: -12%;
-}
-
-@property --wipe-tail {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: -12%;
-}
-
 .before-after-cell {
-  --wipe-soft: 10%;
   /* A cooler emerald than the site's green-500, deep enough to carry white text in light mode. */
   --improved: light-dark(oklch(0.6 0.15 158), oklch(0.68 0.16 158));
   position: relative;
@@ -32,51 +18,130 @@
   grid-area: 1 / 1;
 }
 
-/* A mask clips everything outside its box, so the box reaches past the card to keep its shadow. */
 .before-after-layer {
   display: grid;
-  padding: 16px;
-  margin: -16px;
-  --wipe-edge: -12%;
-  --wipe-tail: -12%;
-  -webkit-mask-image: var(--wipe-mask);
-  mask-image: var(--wipe-mask);
-}
-
-.before-after-new {
-  --wipe-mask: linear-gradient(
-    to right,
-    transparent calc(var(--wipe-tail) - var(--wipe-soft)),
-    #000 calc(var(--wipe-tail) + var(--wipe-soft)),
-    #000 calc(var(--wipe-edge) - var(--wipe-soft)),
-    transparent calc(var(--wipe-edge) + var(--wipe-soft))
-  );
-}
-
-.before-after-old {
-  --wipe-mask: linear-gradient(
-    to right,
-    #000 calc(var(--wipe-tail) - var(--wipe-soft)),
-    transparent calc(var(--wipe-tail) + var(--wipe-soft)),
-    transparent calc(var(--wipe-edge) - var(--wipe-soft)),
-    #000 calc(var(--wipe-edge) + var(--wipe-soft))
-  );
-}
-
-[data-phase="new"] > .before-after-layer,
-[data-phase="gone"] > .before-after-layer {
   transition:
-    --wipe-edge var(--wipe-duration) cubic-bezier(0.65, 0, 0.35, 1),
-    --wipe-tail var(--wipe-duration) cubic-bezier(0.65, 0, 0.35, 1);
+    opacity var(--fade) ease-out,
+    filter var(--fade) ease-out;
 }
 
-[data-phase="new"] > .before-after-layer {
-  --wipe-edge: 112%;
+[data-phase="old"] > .before-after-new,
+[data-phase="build"] > .before-after-new,
+[data-phase="gone"] > .before-after-new {
+  opacity: 0;
 }
 
-[data-phase="gone"] > .before-after-layer {
-  --wipe-edge: 112%;
-  --wipe-tail: 112%;
+[data-phase="build"] > .before-after-old,
+[data-phase="new"] > .before-after-old {
+  opacity: 0;
+  filter: blur(3px);
+}
+
+[data-phase="build"] > .before-after-old {
+  transition-duration: 280ms;
+}
+
+.before-after-blueprint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: visible;
+  pointer-events: none;
+  color: var(--text-tertiary, currentColor);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
+[data-phase="build"] > .before-after-blueprint {
+  opacity: 1;
+}
+
+[data-phase="new"] > .before-after-blueprint {
+  transition-duration: 600ms;
+}
+
+.bp-grid {
+  opacity: 0.35;
+}
+
+.bp-frame,
+.bp-box,
+.bp-leader {
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-dasharray: 0 3.5;
+}
+
+.bp-box {
+  fill: none;
+}
+
+.bp-corner {
+  fill: var(--chart-backdrop, var(--surface, Canvas));
+  stroke: currentColor;
+  stroke-width: 1;
+}
+
+.bp-dots {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.bp-text {
+  fill: currentColor;
+  opacity: 0.22;
+}
+
+.bp-readout text,
+.bp-label {
+  fill: currentColor;
+}
+
+.bp-part {
+  animation: bp-in 260ms ease-out both;
+}
+
+.bp-text.bp-part {
+  animation-name: bp-in-text;
+}
+
+@keyframes bp-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+@keyframes bp-in-text {
+  from {
+    opacity: 0;
+  }
+}
+
+/* A scan line that runs down the card once while the parts appear. */
+.bp-scan {
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-dasharray: 0 3;
+  stroke-linecap: round;
+  animation: bp-scan calc(var(--build) * 0.6) cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes bp-scan {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
 }
 
 /* Tucked into the top-right corner, inside the card. */
@@ -100,9 +165,9 @@
   pointer-events: none;
 }
 
-/* Badge and ring arrive together once the wipe has nearly reached the corner, then leave together. */
+/* Badge and ring arrive together just after the improved card fades in, then leave together. */
 [data-phase="new"] > .before-after-badge {
-  animation: before-after-badge 3.2s ease-out calc(var(--wipe-duration) * 0.72) both;
+  animation: before-after-badge 3.2s ease-out 200ms both;
 }
 
 @keyframes before-after-badge {
@@ -132,7 +197,7 @@
 }
 
 [data-phase="new"] > .before-after-ring {
-  animation: before-after-ring 3.2s ease-out calc(var(--wipe-duration) * 0.72) both;
+  animation: before-after-ring 3.2s ease-out 200ms both;
 }
 
 @keyframes before-after-ring {
@@ -154,7 +219,8 @@
   }
 
   .before-after-badge,
-  .before-after-ring {
+  .before-after-ring,
+  .before-after-blueprint {
     display: none;
   }
 }
