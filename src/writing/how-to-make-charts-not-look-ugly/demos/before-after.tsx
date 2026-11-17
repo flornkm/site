@@ -142,20 +142,31 @@ function Cell({
   );
 }
 
-export function BeforeAfter() {
-  const ref = useRef<HTMLDivElement>(null);
+export function BeforeAfter({ caption }: { caption?: string }) {
+  const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { amount: 0.3 });
   const reduceMotion = useReducedMotion();
   const looping = useLoop(inView && !reduceMotion);
   const phases = reduceMotion ? ALL_NEW : looping;
 
   return (
-    <div ref={ref} style={{ "--build": `${BUILD}ms`, "--fade": `${FADE}ms` } as CSSProperties}>
+    <figure
+      ref={ref}
+      className="not-prose"
+      style={{ "--build": `${BUILD}ms`, "--fade": `${FADE}ms` } as CSSProperties}
+    >
       <Bento>
         {WIDGETS.map(({ span, Old, New }, i) => (
           <Cell key={i} span={span} Old={Old} New={New} phase={phases[i]} />
         ))}
       </Bento>
-    </div>
+      {/* Matches the captions under videos and images in other posts. The -mt-6 pulls it up
+          into the dashboard's bottom margin so it sits 16px below the cards. */}
+      {caption && (
+        <figcaption className="-mt-6 mb-10 font-serif text-[11px] font-normal italic text-primary lg:mx-auto lg:max-w-[460px]">
+          {caption}
+        </figcaption>
+      )}
+    </figure>
   );
 }

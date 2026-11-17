@@ -4,7 +4,7 @@ import { IconCheckmark1Small } from "central-icons/IconCheckmark1Small";
 import { IconClipboard2 } from "central-icons/IconClipboard2";
 import { IconLock } from "central-icons/IconLock";
 import { IconUnlocked } from "central-icons/IconUnlocked";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { useCallback, useState, useSyncExternalStore, type FormEvent } from "react";
 
@@ -60,7 +60,10 @@ function useFloating() {
     let frame = 0;
     const check = () => {
       frame = 0;
-      setFloating(marker.getBoundingClientRect().top > window.innerHeight - 17);
+      // A 4px dead zone either side of the resting line, so the card can't flicker between
+      // floating and resting when the page stops right on it.
+      const offset = marker.getBoundingClientRect().top - (window.innerHeight - 17);
+      setFloating((was) => (was ? offset > -4 : offset > 4));
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(check);
@@ -131,6 +134,7 @@ export function SkillGate({
   };
 
   const [restRef, floating] = useFloating();
+  const reduceMotion = useReducedMotion();
   const Icon = unlocked ? IconUnlocked : IconLock;
   const commandClass = cn(
     "min-w-0 flex-1 truncate px-1.5 font-mono text-xs",
@@ -144,10 +148,16 @@ export function SkillGate({
         the bottom of the viewport while its place in the post is still below the fold, so it
         floats along while reading and settles into place when the reader gets there. Plain CSS:
         nothing jumps if scripts are slow, and the script only adds the lifted shadow. */}
-      <div
+      <motion.div
         role="region"
         aria-labelledby={`skill-${skill}`}
         data-floating={floating || undefined}
+        // Floating, it sits a touch smaller and lifted; reaching its place it springs to full
+        // size, so the landing reads as the card settling in. Scale only, so layout never moves.
+        initial={false}
+        animate={{ scale: floating && !reduceMotion ? 0.97 : 1 }}
+        transition={{ type: "spring", visualDuration: 0.45, bounce: 0.25 }}
+        style={{ transformOrigin: "50% 100%" }}
         className="not-prose sticky bottom-[max(16px,env(safe-area-inset-bottom))] z-20 my-12 rounded-[14px] bg-tertiary p-1.5 transition-shadow duration-300 data-floating:smooth-shadow-ring-md lg:mx-auto lg:max-w-[560px]"
       >
         {/* On lg the card is wider than the 460px text measure: the icon moves to the card's top-left
@@ -268,7 +278,7 @@ export function SkillGate({
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
       {/* Marks where the card's bottom edge rests: the -mt-12 cancels the card's bottom margin. */}
       <div ref={restRef} aria-hidden className="-mt-12 h-px" />
     </>
