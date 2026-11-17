@@ -111,7 +111,9 @@ export function SkillGate({
       aria-labelledby={`skill-${skill}`}
       className="not-prose my-12 rounded-[14px] bg-tertiary p-1.5 lg:mx-auto lg:max-w-[560px]"
     >
-      <div className="flex gap-2 px-2.5 pt-2.5 pb-4">
+      {/* On lg the card is wider than the 460px text measure, so the title starts on the text's
+          left edge: half the leftover width, minus the card's p-1.5 and the icon plus gap. */}
+      <div className="flex gap-2 px-2.5 pt-2.5 pb-4 lg:pl-[calc(50%-254px)]">
         <Icon className="mt-0.5 size-4 shrink-0 text-secondary" aria-hidden />
         <div>
           <h2 id={`skill-${skill}`} className="text-sm leading-5 fw-medium text-primary">
