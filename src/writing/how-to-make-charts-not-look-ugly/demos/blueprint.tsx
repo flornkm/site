@@ -5,7 +5,14 @@ type Part =
   | { kind: "text" | "box"; x: number; y: number; w: number; h: number }
   | { kind: "dots"; points: Point[]; y: number };
 
-export type BlueprintData = { id: number; width: number; height: number; parts: Part[] };
+export type BlueprintData = {
+  id: number;
+  width: number;
+  height: number;
+  // The card's content box, left and right, so the grid can start and end exactly on it.
+  content: { left: number; right: number };
+  parts: Part[];
+};
 
 const DOT_STEP = 6;
 const MAX_DOTS = 1800;
@@ -71,15 +78,33 @@ export function measureBlueprint(cell: HTMLElement, layer: HTMLElement): Bluepri
       parts.push({ kind: "dots", points, y: Math.min(...points.map((p) => p[1])) });
   }
 
+  const card = layer.querySelector("section") ?? layer;
+  const cardBox = card.getBoundingClientRect();
+  const style = getComputedStyle(card);
+  const content = {
+    left: cardBox.left - origin.left + parseFloat(style.paddingLeft),
+    right: cardBox.right - origin.left - parseFloat(style.paddingRight),
+  };
+
   return {
     id: ++nextId,
     width: Math.round(origin.width),
     height: Math.round(origin.height),
+    content,
     parts,
   };
 }
 
 const r1 = (n: number) => Math.round(n * 10) / 10;
+const GRID = 16;
+
+// Vertical lines from the content's left edge to its right edge, the spacing stretched from 16px
+// just enough that a line lands on both edges. Drawn at half-pixels so 1px lines stay crisp.
+function gridLines(left: number, right: number) {
+  const columns = Math.max(1, Math.round((right - left) / GRID));
+  const step = (right - left) / columns;
+  return Array.from({ length: columns + 1 }, (_, i) => Math.round(left + i * step) + 0.5);
+}
 const dotsPath = (points: readonly Point[]) =>
   points.map(([x, y]) => `M${r1(x)},${r1(y)}h0`).join("");
 
@@ -110,9 +135,6 @@ export function Blueprint({ data, build }: { data: BlueprintData; build: number 
       style={{ "--build": `${build}ms` } as CSSProperties}
     >
       <defs>
-        <pattern id={`${id}-grid`} width="16" height="16" patternUnits="userSpaceOnUse">
-          <path d="M8 0V16" stroke="currentColor" strokeWidth="1" />
-        </pattern>
         {/* One bright band sweeping across the whole card, so every text bar shimmers in step,
             like a single light passing over the drawing rather than each bar on its own. */}
         <linearGradient
@@ -136,7 +158,12 @@ export function Blueprint({ data, build }: { data: BlueprintData; build: number 
           />
         </linearGradient>
       </defs>
-      <rect width={w} height={h} rx="16" fill={`url(#${id}-grid)`} className="bp-grid" />
+      <path
+        d={gridLines(data.content.left, data.content.right)
+          .map((x) => `M${x},0V${h}`)
+          .join("")}
+        className="bp-grid"
+      />
       <rect
         x="0.75"
         y="0.75"
