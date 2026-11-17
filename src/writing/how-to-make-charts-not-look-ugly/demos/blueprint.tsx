@@ -101,7 +101,7 @@ const GRID = 16;
 // Boxes that overlap horizontally share a column: a heatmap's cells, a stack's segments.
 function columnSpans(parts: readonly Part[]) {
   const boxes = parts
-    .filter((p): p is Extract<Part, { kind: "box" }> => p.kind === "box")
+    .filter((p): p is Part & { kind: "box"; x: number; w: number } => p.kind === "box")
     .sort((a, b) => a.x - b.x);
   const spans: { start: number; end: number }[] = [];
   for (const b of boxes) {
