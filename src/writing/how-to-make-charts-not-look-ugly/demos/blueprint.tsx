@@ -110,8 +110,8 @@ export function Blueprint({ data, build }: { data: BlueprintData; build: number 
       style={{ "--build": `${build}ms` } as CSSProperties}
     >
       <defs>
-        <pattern id={`${id}-grid`} width="12" height="12" patternUnits="userSpaceOnUse">
-          <circle cx="6" cy="6" r="0.7" fill="currentColor" />
+        <pattern id={`${id}-grid`} width="16" height="16" patternUnits="userSpaceOnUse">
+          <path d="M8 0V16" stroke="currentColor" strokeWidth="1" />
         </pattern>
         {/* One bright band sweeping across the whole card, so every text bar shimmers in step,
             like a single light passing over the drawing rather than each bar on its own. */}
