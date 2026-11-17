@@ -104,11 +104,12 @@ export function SkillGate({
   );
 
   return (
-    <section
+    // A div, not a section: the post template caps every other top-level element at the 460px
+    // text measure, and this should match the 560px "Stay in touch" card instead.
+    <div
+      role="region"
       aria-labelledby={`skill-${skill}`}
-      // 560px and centred on the text column even where the column is narrower, like the
-      // charts above it, so it reads as a figure rather than a paragraph.
-      className="not-prose relative my-12 rounded-[14px] bg-tertiary p-1.5 md:left-1/2 md:w-[min(560px,calc(100vw-48px))] md:-translate-x-1/2"
+      className="not-prose my-12 rounded-[14px] bg-tertiary p-1.5 lg:mx-auto lg:max-w-[560px]"
     >
       <div className="flex gap-2 px-2.5 pt-2.5 pb-4">
         <Icon className="mt-0.5 size-4 shrink-0 text-secondary" aria-hidden />
@@ -120,80 +121,82 @@ export function SkillGate({
         </div>
       </div>
 
-      <div className="relative flex h-9 items-center gap-1 rounded-lg bg-surface p-1 smooth-shadow-ring-xs dark:bg-surface-tertiary">
-        <code aria-hidden={!unlocked || undefined} className={commandClass}>
-          {command}
-        </code>
-        {unlocked && (
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={copy}
-            prefix={copied ? <IconCheckmark1Small /> : <IconClipboard2 />}
-          >
-            {copied ? "Copied" : "Copy"}
-          </Button>
-        )}
-      </div>
-
-      <div className="mt-1.5 flex h-9 items-center rounded-lg bg-surface p-1 smooth-shadow-ring-xs outline outline-transparent outline-offset-0 transition-[outline-color,outline-offset,outline-width] duration-150 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-blue-300 dark:bg-surface-tertiary">
-        <AnimatePresence mode="wait" initial={false}>
-          {unlocked ? (
-            <motion.div
-              key="download"
-              {...SWAP}
-              className="flex h-full w-full items-center justify-between gap-1 pl-1.5"
+      <div className="rounded-lg bg-surface smooth-shadow-ring-xs outline outline-transparent outline-offset-0 transition-[outline-color,outline-offset,outline-width] duration-150 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-blue-300 dark:bg-surface-tertiary">
+        <div className="flex h-9 items-center gap-1 p-1">
+          <span aria-hidden={!unlocked || undefined} className={commandClass}>
+            {command}
+          </span>
+          {unlocked && (
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={copy}
+              prefix={copied ? <IconCheckmark1Small /> : <IconClipboard2 />}
             >
-              <p role="status" className="truncate text-sm text-secondary">
-                Unlocked. Run it in your project, or download it.
-              </p>
-              <a
-                href={downloadUrl}
-                className="inline-flex h-7 shrink-0 items-center gap-1 rounded-sm bg-accent-primary px-2.5 text-sm font-medium text-accent-foreground transition-colors duration-150 hover:bg-accent-primary-hover active:bg-accent-primary-active"
-              >
-                <IconArrowDown className="size-4" aria-hidden />
-                Download
-              </a>
-            </motion.div>
-          ) : (
-            <motion.form
-              key="form"
-              {...SWAP}
-              onSubmit={submit}
-              // Before hydration Enter would otherwise do a native GET to this page: a reload
-              // with the address in the URL. Posting to the API instead still saves it.
-              action="/api/stay-in-touch"
-              method="post"
-              className="flex h-full w-full items-center gap-1"
-            >
-              <input
-                type="email"
-                name="email"
-                required
-                autoComplete="email"
-                placeholder="you@example.com"
-                aria-label="Email address"
-                aria-invalid={status === "error" || undefined}
-                aria-describedby={status === "error" ? `skill-${skill}-error` : undefined}
-                onChange={() => status === "error" && setStatus("idle")}
-                className="h-full min-w-0 flex-1 bg-transparent px-1.5 text-sm text-primary outline-none placeholder:text-quaternary"
-              />
-              <input type="hidden" name="source" value={source} />
-              {/* Honeypot for form-filling bots; hidden from people and assistive tech. */}
-              <input
-                type="text"
-                name="website"
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden
-                className="sr-only"
-              />
-              <Button type="submit" size="sm" disabled={status === "sending"}>
-                Unlock
-              </Button>
-            </motion.form>
+              {copied ? "Copied" : "Copy"}
+            </Button>
           )}
-        </AnimatePresence>
+        </div>
+
+        <div className="flex h-9 items-center border-t border-primary p-1">
+          <AnimatePresence mode="wait" initial={false}>
+            {unlocked ? (
+              <motion.div
+                key="download"
+                {...SWAP}
+                className="flex h-full w-full items-center justify-between gap-1 pl-1.5"
+              >
+                <p role="status" className="truncate text-sm text-secondary">
+                  Unlocked. Run it in your project, or download it.
+                </p>
+                <a
+                  href={downloadUrl}
+                  className="inline-flex h-7 shrink-0 items-center gap-1 rounded-sm bg-accent-primary px-2.5 text-sm font-medium text-accent-foreground transition-colors duration-150 hover:bg-accent-primary-hover active:bg-accent-primary-active"
+                >
+                  <IconArrowDown className="size-4" aria-hidden />
+                  Download
+                </a>
+              </motion.div>
+            ) : (
+              <motion.form
+                key="form"
+                {...SWAP}
+                onSubmit={submit}
+                // Before hydration Enter would otherwise do a native GET to this page: a reload
+                // with the address in the URL. Posting to the API instead still saves it.
+                action="/api/stay-in-touch"
+                method="post"
+                className="flex h-full w-full items-center gap-1"
+              >
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  aria-label="Email address"
+                  aria-invalid={status === "error" || undefined}
+                  aria-describedby={status === "error" ? `skill-${skill}-error` : undefined}
+                  onChange={() => status === "error" && setStatus("idle")}
+                  className="h-full min-w-0 flex-1 bg-transparent px-1.5 text-sm text-primary outline-none placeholder:text-quaternary"
+                />
+                <input type="hidden" name="source" value={source} />
+                {/* Honeypot for form-filling bots; hidden from people and assistive tech. */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden
+                  className="sr-only"
+                />
+                <Button type="submit" size="sm" disabled={status === "sending"}>
+                  Unlock
+                </Button>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
       <AnimatePresence initial={false}>
@@ -216,6 +219,6 @@ export function SkillGate({
           </motion.div>
         )}
       </AnimatePresence>
-    </section>
+    </div>
   );
 }
