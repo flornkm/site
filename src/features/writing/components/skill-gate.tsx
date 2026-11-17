@@ -106,7 +106,9 @@ export function SkillGate({
   return (
     <section
       aria-labelledby={`skill-${skill}`}
-      className="not-prose my-12 rounded-[14px] bg-tertiary p-1.5 lg:mx-auto lg:max-w-[560px]"
+      // 560px and centred on the text column even where the column is narrower, like the
+      // charts above it, so it reads as a figure rather than a paragraph.
+      className="not-prose relative my-12 rounded-[14px] bg-tertiary p-1.5 md:left-1/2 md:w-[min(560px,calc(100vw-48px))] md:-translate-x-1/2"
     >
       <div className="flex gap-2 px-2.5 pt-2.5 pb-4">
         <Icon className="mt-0.5 size-4 shrink-0 text-secondary" aria-hidden />
