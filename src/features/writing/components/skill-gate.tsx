@@ -54,6 +54,7 @@ export function SkillGate({
   skill,
   title,
   description,
+  prompt,
   command,
   downloadUrl,
   source,
@@ -61,6 +62,8 @@ export function SkillGate({
   skill: string;
   title: string;
   description: string;
+  // The ask ("Leave your email to unlock it."): its own line on desktop, gone once unlocked.
+  prompt?: string;
   command: string;
   downloadUrl: string;
   source: string;
@@ -123,7 +126,10 @@ export function SkillGate({
           <h2 id={`skill-${skill}`} className="text-sm leading-5 fw-medium text-primary">
             {title}
           </h2>
-          <p className="mt-0.5 text-sm leading-5 text-tertiary">{description}</p>
+          <p className="mt-0.5 text-sm leading-5 text-tertiary">
+            {description}
+            {prompt && !unlocked && <span className="lg:block"> {prompt}</span>}
+          </p>
         </div>
       </div>
 
