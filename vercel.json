@@ -8,6 +8,11 @@
   "crons": [{ "path": "/api/runs/sync", "schedule": "0 4 * * *" }],
   "redirects": [
     {
+      "source": "/writing/how-to-make-charts-not-look-ugly",
+      "destination": "/writing/how-i-build-charts-with-agents",
+      "permanent": true
+    },
+    {
       "source": "/writing/helpful-tips-for-better-design-in-the-web",
       "destination": "/writing/tips-to-improve-your-product",
       "permanent": true
