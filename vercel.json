@@ -13,6 +13,11 @@
       "permanent": true
     },
     {
+      "source": "/writing/how-to-make-charts-not-look-ugly.md",
+      "destination": "/writing/how-i-build-charts-with-agents.md",
+      "permanent": true
+    },
+    {
       "source": "/writing/helpful-tips-for-better-design-in-the-web",
       "destination": "/writing/tips-to-improve-your-product",
       "permanent": true
