@@ -77,6 +77,13 @@ function AboutPage() {
         <div className="col-start-3 col-span-7 md:col-start-6 md:col-span-4 lg:col-span-2">
           <div className="hyphens-auto space-y-6 text-justify text-sm leading-relaxed text-primary md:max-w-72">
             <p>
+              When people ask about my background, I usually say{" "}
+              {/* The page's own background colour, so the answer flips with the theme. */}
+              <span className="type-mono dark:hidden">#FDFDFD</span>
+              <span className="type-mono hidden dark:inline">#000000</span>. The longer answer is
+              below.
+            </p>
+            <p>
               Born in the south of Germany, I grew up with the Internet. In my childhood, I tried a
               bunch of different disciplines, ranging from 3D art to graphic design.
             </p>

@@ -12,7 +12,7 @@ export const markdownPages: Record<string, MarkdownPage> = {
   },
   "/about": {
     "title": "About ‹ Florian Kiem",
-    "markdown": "# About Florian Kiem\n\nFlorian Kiem — Designer, Engineer.\n\nBorn in the south of Germany, I grew up with the Internet. In my childhood, I tried a bunch of different disciplines, ranging from 3D art to graphic design.\n\nAfter studying product design, my day-to-day work evolved into something different. Pure Figma designs aren't enough, so I see my value in developing foundational design systems hands-on.\n\nOutside of work, I like discovering the world and other cultures. Below are a few photos I took along the way.\n\n---\n\nCanonical: https://floriankiem.com/about\nMore for agents: https://floriankiem.com/llms.txt\n"
+    "markdown": "# About Florian Kiem\n\nFlorian Kiem — Designer, Engineer.\n\nWhen people ask about my background, I usually say #FDFDFD. The longer answer is below.\n\nBorn in the south of Germany, I grew up with the Internet. In my childhood, I tried a bunch of different disciplines, ranging from 3D art to graphic design.\n\nAfter studying product design, my day-to-day work evolved into something different. Pure Figma designs aren't enough, so I see my value in developing foundational design systems hands-on.\n\nOutside of work, I like discovering the world and other cultures. Below are a few photos I took along the way.\n\n---\n\nCanonical: https://floriankiem.com/about\nMore for agents: https://floriankiem.com/llms.txt\n"
   },
   "/contact": {
     "title": "Contact ‹ Florian Kiem",
