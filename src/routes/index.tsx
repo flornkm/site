@@ -10,7 +10,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Florian Kiem ‹ Designer, Engineer" },
+      { title: "Florian Kiem ‹ Design and code" },
       {
         name: "description",
         content:

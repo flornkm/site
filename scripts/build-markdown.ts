@@ -32,7 +32,7 @@ const projectLine = (p: (typeof PROJECTS)[number]) => {
 
 page(
   "/",
-  "Florian Kiem ‹ Designer, Engineer",
+  "Florian Kiem ‹ Design and code",
   `# Florian Kiem
 
 Working where design meets code. Partnering with ambitious teams, occasionally as an investor.
@@ -63,7 +63,7 @@ page(
   "About ‹ Florian Kiem",
   `# About Florian Kiem
 
-Florian Kiem — Designer, Engineer.
+Florian Kiem — Design and code.
 
 When people ask about my background, I usually say #FDFDFD. The longer answer is below.
 
