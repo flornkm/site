@@ -67,7 +67,9 @@ Florian Kiem — Designer, Engineer.
 
 Born in the south of Germany, I grew up with the Internet. In my childhood, I tried a bunch of different disciplines, ranging from 3D art to graphic design.
 
-After studying product design, my day-to-day work evolved into something different. Pure Figma designs aren't enough, so I see my value in developing foundational design systems hands-on.`,
+After studying product design, my day-to-day work evolved into something different. Pure Figma designs aren't enough, so I see my value in developing foundational design systems hands-on.
+
+Outside of work, I like discovering the world and other cultures. Below are a few photos I took along the way.`,
 );
 
 // ---- Contact (mirrors src/routes/contact.tsx) -------------------------------

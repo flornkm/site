@@ -85,6 +85,10 @@ function AboutPage() {
               Pure Figma designs aren't enough, so I see my value in developing foundational design
               systems hands-on.
             </p>
+            <p>
+              Outside of work, I like discovering the world and other cultures. Below are a few
+              photos I took along the way.
+            </p>
           </div>
         </div>
       </div>
