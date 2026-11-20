@@ -9,12 +9,22 @@
   "redirects": [
     {
       "source": "/writing/how-to-make-charts-not-look-ugly",
-      "destination": "/writing/how-i-build-charts-with-agents",
+      "destination": "/writing/building-on-brand-charts-with-agents",
       "permanent": true
     },
     {
       "source": "/writing/how-to-make-charts-not-look-ugly.md",
-      "destination": "/writing/how-i-build-charts-with-agents.md",
+      "destination": "/writing/building-on-brand-charts-with-agents.md",
+      "permanent": true
+    },
+    {
+      "source": "/writing/how-i-build-charts-with-agents",
+      "destination": "/writing/building-on-brand-charts-with-agents",
+      "permanent": true
+    },
+    {
+      "source": "/writing/how-i-build-charts-with-agents.md",
+      "destination": "/writing/building-on-brand-charts-with-agents.md",
       "permanent": true
     },
     {

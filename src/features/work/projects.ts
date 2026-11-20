@@ -1,91 +1,30 @@
-// A single path renders wide (image or video); an array renders 3-up (phone screenshots).
-export type ProjectMedia = string | string[];
-
 export type Project = {
   name: string;
   date: string;
   url?: string;
-  /** One-sentence summary of the project and the work — read by screen readers,
-   * crawlers, and the markdown variants of pages; the visual layout stays media-only. */
+  /** One-sentence summary of the project, shown as the link title on home and in the
+   * markdown variant of the page. */
   description?: string;
-  /** Projects without media are listed in the sidebar but not scrolled to. */
-  media?: ProjectMedia[];
-  /** Lower values lead the home page media column; the sidebar keeps array order regardless. */
-  mediaOrder?: number;
 };
 
 export const PROJECTS: Project[] = [
   {
-    name: "Flow",
-    description:
-      "Design and engineering for Flow Engineering’s web presence, from the company pages to an animated 404.",
+    name: "Cognition",
+    description: "Design work for Cognition, the company behind Devin, the AI software engineer.",
     date: "2026",
-    url: "https://flowengineering.com",
-    mediaOrder: 1,
-    media: ["/images/flow/hero.webp", "/videos/flow/company.webm", "/videos/flow/404.webm"],
+    url: "https://cognition.ai",
   },
   {
-    name: "Prodex",
-    description:
-      "Design and engineering for Prodex’s website, which introduces Dexter, an AI industrial engineer for factories.",
+    name: "Legora",
+    description: "Design work for Legora, a collaborative AI platform for lawyers.",
     date: "2026",
-    url: "https://prodexlabs.com",
-    mediaOrder: 2,
-    media: ["/videos/prodex/website-hero.webm", "/videos/prodex/website-tour.webm"],
+    url: "https://legora.com",
   },
   {
-    name: "Sona",
-    description:
-      "Product design for Sona, an app that records conversations and turns them into transcripts, summaries, and key insights.",
-    date: "2024 – 2025",
-    url: "https://sona.wtf",
-    mediaOrder: 3,
-    media: [
-      [
-        "/images/sona/recording.webp",
-        "/images/sona/processing.webp",
-        "/images/sona/key-insights.webp",
-      ],
-      ["/images/sona/transcript.webp", "/images/sona/sharing.webp", "/images/sona/follow-up.webp"],
-      "/videos/sona/sona-use.webm",
-      [
-        "/images/sona/overview.webp",
-        "/images/sona/export.webp",
-        "/images/sona/mobile-protocol.webp",
-      ],
-      ["/images/sona/settings.webp", "/images/sona/upsell-modal.webp", "/images/sona/upsell.webp"],
-      ["/images/sona/select.webp", "/images/sona/selected.webp", "/images/sona/bulk-delete.webp"],
-      ["/images/sona/invite-user.webp", "/images/sona/faq.webp", "/images/sona/subscriber.webp"],
-      ["/images/sona/login.webp", "/images/sona/otp.webp", "/images/sona/otp-loading.webp"],
-      "/videos/sona/hero-video.webm",
-      "/images/sona/devices.webp",
-    ],
-  },
-  {
-    name: "Superpower",
-    description:
-      "Interface work for Superpower, a preventative health platform — health data categories, protocols, and mobile app surfaces.",
-    date: "2025 – 2026",
-    url: "https://superpower.com",
-    media: [
-      "/images/superpower/modal.webp",
-      "/videos/superpower/health-categories.webm",
-      "/videos/superpower/scroll-effect.webm",
-      [
-        "/images/superpower/mobile-data-sheet.webp",
-        "/images/superpower/mobile-data-categories.webp",
-        "/images/superpower/mobile-protocol.webp",
-      ],
-      "/images/superpower/superpower-ai.webp",
-      "/videos/superpower/protocol-reveal.webm",
-      "/images/superpower/download-mobile-app.webp",
-    ],
-  },
-  {
-    name: "Delphi",
-    description: "Design work for Delphi, a platform for interactive digital minds.",
+    name: "Rogo",
+    description: "Design work for Rogo, an AI platform for financial research and analysis.",
     date: "2026",
-    url: "https://delphi.ai",
+    url: "https://rogo.com",
   },
   {
     name: "Kalshi",
@@ -94,10 +33,24 @@ export const PROJECTS: Project[] = [
     url: "https://kalshi.com",
   },
   {
-    name: "Snaptrude",
-    description: "Design work for Snaptrude, a collaborative 3D building-design tool.",
-    date: "2025",
-    url: "https://snaptrude.com",
+    name: "Superpower",
+    description:
+      "Interface work for Superpower, a preventative health platform — health data categories, protocols, and mobile app surfaces.",
+    date: "2025 – 2026",
+    url: "https://superpower.com",
+  },
+  {
+    name: "Flow",
+    description:
+      "Design and engineering for Flow Engineering’s web presence, from the company pages to an animated 404.",
+    date: "2026",
+    url: "https://flowengineering.com",
+  },
+  {
+    name: "Delphi",
+    description: "Design work for Delphi, a platform for interactive digital minds.",
+    date: "2026",
+    url: "https://delphi.ai",
   },
   {
     name: "Morphic",

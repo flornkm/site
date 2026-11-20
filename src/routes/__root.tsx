@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { HeadContent, Outlet, Scripts, createRootRoute, useLocation } from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 import { Analytics } from "@vercel/analytics/react";
 import { MotionConfig } from "motion/react";
 
@@ -106,11 +106,6 @@ export const Route = createRootRoute({
 });
 
 function RootLayout() {
-  const { pathname } = useLocation();
-  const isHome = pathname === "/";
-  // Home already shows Colophon/Experiments in its sidebar, so its footer drops the "More" column.
-  const footerVariant = isHome ? "indent" : "default";
-
   return (
     <html lang="en">
       <head>
@@ -139,12 +134,10 @@ function RootLayout() {
           <MotionConfig reducedMotion="user">
             <TooltipProvider>
               <Navigation />
-              <main
-                className={`mx-auto w-full max-w-[2560px] min-h-screen px-6 pt-4 ${isHome ? "pb-0" : "pb-16"}`}
-              >
+              <main className="mx-auto w-full max-w-[2560px] min-h-screen px-6 pt-4 pb-16">
                 <Outlet />
               </main>
-              <Footer variant={footerVariant} />
+              <Footer />
             </TooltipProvider>
           </MotionConfig>
         </QueryClientProvider>

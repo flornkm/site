@@ -28,6 +28,7 @@ interface TooltipProps {
   // Controlled visibility for non-hover triggers (e.g. shown while dragging). Omit for
   // the default hover behavior.
   open?: boolean;
+  onOpenChange?: React.ComponentProps<typeof BaseTooltip.Root>["onOpenChange"];
   // Wraps the trigger in a span instead of a div, for something sitting inside a paragraph:
   // a div there ends the <p> early and splits the sentence into two in the DOM.
   inline?: boolean;
@@ -39,10 +40,11 @@ export default function Tooltip({
   className,
   style,
   open,
+  onOpenChange,
   inline,
 }: TooltipProps) {
   return (
-    <BaseTooltip.Root open={open}>
+    <BaseTooltip.Root open={open} onOpenChange={onOpenChange}>
       <BaseTooltip.Trigger
         // Two branches rather than one dynamic tag: a "span" | "div" union intersects the two
         // prop types, and their refs have no common assignment, so every prop types as `never`.

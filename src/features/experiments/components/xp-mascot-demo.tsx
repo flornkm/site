@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { PROJECTS } from "@/features/work/projects";
 import "./xp-mascot-demo.css";
+
+const WORK_LIST = new Intl.ListFormat("en", { type: "conjunction" }).format(
+  PROJECTS.map((project) => project.name),
+);
 
 // The official Claude mark. Rasterized onto a grid at runtime so it reads as lightly pixel-art
 // while keeping its real silhouette (a sampling filter can't preserve the shape).
@@ -125,7 +130,7 @@ const SCRIPT: { match: RegExp; reply: string }[] = [
   },
   {
     match: /work|compan|client|employ|job|team/i,
-    reply: "Design and code for Superpower, Kalshi, Snaptrude, Morphic, Dash0, and Opral.",
+    reply: `Design and code for ${WORK_LIST}.`,
   },
   {
     match: /xp|windows|clippy|assistant|you|who are/i,
