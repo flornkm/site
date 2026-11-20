@@ -1,14 +1,8 @@
 import { Image } from "@/components/shared/image";
-import { Link } from "@/components/ui/link";
 import { PHOTOS } from "@/features/about/const/photos";
 import { absoluteUrl, canonicalLink } from "@/lib/site";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
-
-const CONTACT_LINKS = [
-  { name: "@flornkm", href: "https://x.com/flornkm" },
-  { name: "Email", href: "mailto:hello@floriankiem.com" },
-];
 
 const AVATAR = { src: "/images/avatars/florian_kiem.webp", alt: "Florian Kiem" };
 
@@ -65,8 +59,10 @@ function AboutPage() {
     <div>
       <div className="grid grid-cols-9 gap-x-6">
         <div className="col-start-1 col-span-9 mb-10 flex flex-col md:col-start-3 md:col-span-2 md:mb-0">
-          <h1 className="text-base fw-medium leading-snug text-primary">Florian Kiem</h1>
-          <p className="text-base fw-medium leading-snug text-tertiary">Designer, Engineer</p>
+          <h1 className="text-sm fw-medium leading-snug text-primary">Background</h1>
+          <p className="text-sm fw-medium leading-snug text-tertiary">
+            From product design to code
+          </p>
           <div className="order-first mb-8 max-w-40 bg-[#FDFDFC] md:order-none md:mt-12 md:mb-0">
             <Image
               src={AVATAR.src}
@@ -89,23 +85,6 @@ function AboutPage() {
               Pure Figma designs aren't enough, so I see my value in developing foundational design
               systems hands-on.
             </p>
-            <p>
-              In the past, I've worked with companies like Superpower and Dash0. I also invest in
-              some of the companies I work with.
-            </p>
-            <div className="mt-8 flex items-center gap-4">
-              {CONTACT_LINKS.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  target={link.href.startsWith("http") ? "_blank" : undefined}
-                  rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="text-sm fw-link text-tertiary transition-colors hover:text-secondary"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
           </div>
         </div>
       </div>

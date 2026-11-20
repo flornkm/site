@@ -32,6 +32,20 @@ const COLUMN_LINKS = SOCIAL_LINKS.filter((l) => l !== FEATURED_LINK);
 
 const isExternal = (href: string) => href.startsWith("http");
 
+const OPEN_EVENT = "contact-dialog:open";
+
+/** Spread onto anything that calls openContactDialog, so pressing it while the dialog is
+ * already open doesn't count as an outside click that closes and then reopens it. */
+export const CONTACT_TRIGGER_PROPS = { "data-contact-trigger": "" } as const;
+
+/** Opens the nav's contact dialog from anywhere. Returns false when no copy is on screen
+ * (e.g. viewports under 350px hide it), so callers can fall back to the /contact page. */
+export function openContactDialog(): boolean {
+  const event = new CustomEvent(OPEN_EVENT, { detail: { handled: false } });
+  window.dispatchEvent(event);
+  return event.detail.handled;
+}
+
 export default function ContactDialog({
   roundedRightWhenClosed = false,
 }: {
@@ -58,6 +72,17 @@ export default function ContactDialog({
   useEffect(() => () => clearTimeout(copyTimeout.current), []);
 
   useEffect(() => {
+    const handleOpen = (e: Event) => {
+      // The nav mounts a desktop and a mobile copy; only the one actually displayed opens.
+      if (!containerRef.current?.getClientRects().length) return;
+      (e as CustomEvent<{ handled: boolean }>).detail.handled = true;
+      setIsOpen(true);
+    };
+    window.addEventListener(OPEN_EVENT, handleOpen);
+    return () => window.removeEventListener(OPEN_EVENT, handleOpen);
+  }, []);
+
+  useEffect(() => {
     if (!isOpen) return;
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
@@ -69,7 +94,9 @@ export default function ContactDialog({
   useEffect(() => {
     if (!isOpen) return;
     const handleClick = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const target = e.target as Element;
+      if (target.closest?.("[data-contact-trigger]")) return;
+      if (containerRef.current && !containerRef.current.contains(target)) {
         close();
       }
     };

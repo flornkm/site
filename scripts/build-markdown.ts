@@ -32,14 +32,20 @@ const projectLine = (p: (typeof PROJECTS)[number]) => {
 
 page(
   "/",
-  "Work ‹ Florian Kiem",
-  `# Florian Kiem — Designs and codes software products. Invests in a few.
+  "Florian Kiem ‹ Designer, Engineer",
+  `# Florian Kiem
 
-I am Florian Kiem, a design engineer building software products in the intersection of design and code. This page shows selected work: interface design, design systems, motion, and front-end engineering. The visual version presents each project through screenshots and short clips.
+Working where design meets code. Partnering with ambitious teams, occasionally as an investor.
+
+I am Florian Kiem, a designer and engineer building software products in the intersection of design and code. This page lists selected work: interface design, design systems, motion, and front-end engineering.
 
 ## Selected work
 
 ${PROJECTS.map(projectLine).join("\n\n")}
+
+Plus some teams in stealth.
+
+Reach out on [X](https://x.com/messages/compose?recipient_id=1053753388289155073), by [email](mailto:hello@floriankiem.com), or [elsewhere](${SITE_URL}/contact).
 
 ## More
 
@@ -61,11 +67,7 @@ Florian Kiem — Designer, Engineer.
 
 Born in the south of Germany, I grew up with the Internet. In my childhood, I tried a bunch of different disciplines, ranging from 3D art to graphic design.
 
-After studying product design, my day-to-day work evolved into something different. Pure Figma designs aren't enough, so I see my value in developing foundational design systems hands-on.
-
-In the past, I've worked with companies like Superpower and Dash0. I also invest in some of the companies I work with.
-
-Reach me on [X](https://x.com/flornkm) or via [email](mailto:hello@floriankiem.com).`,
+After studying product design, my day-to-day work evolved into something different. Pure Figma designs aren't enough, so I see my value in developing foundational design systems hands-on.`,
 );
 
 // ---- Contact (mirrors src/routes/contact.tsx) -------------------------------
@@ -87,7 +89,7 @@ If you are writing about a project, a short note on what you are building and wh
 
 ${contactLines}
 
-I am Florian Kiem, a design engineer building software products — currently based in Dubai, working with teams worldwide. Postal details are on the [imprint](${SITE_URL}/imprint) page.`,
+I am Florian Kiem, a designer and engineer building software products — currently based in Dubai, working with teams worldwide. Postal details are on the [imprint](${SITE_URL}/imprint) page.`,
 );
 
 // ---- Experiments (titles parsed from the route's experiment() calls) --------

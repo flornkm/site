@@ -18,9 +18,9 @@ export const STRUCTURED_DATA = {
       name: "Florian Kiem",
       url: SITE_URL,
       email: "mailto:hello@floriankiem.com",
-      jobTitle: "Design Engineer",
+      jobTitle: "Designer, Engineer",
       description:
-        "Florian Kiem is a design engineer who designs and codes software products, working in the intersection of design and engineering.",
+        "Florian Kiem designs and builds software with early teams, and invests in a few.",
       sameAs: SOCIAL_PROFILES,
     },
     {

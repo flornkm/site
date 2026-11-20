@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
+import { PROJECTS } from "@/features/work/projects";
 import { useTypingAnimation } from "../../../hooks/use-typing-animation";
 import { CRTDisplay } from "../../contact/components/crt/crt-display";
 import type { CRTMessage } from "../../contact/components/crt/crt-text-renderer";
+
+const WORK_LIST = new Intl.ListFormat("en", { type: "conjunction" }).format(
+  PROJECTS.map((project) => project.name),
+);
 
 const BOOT_MESSAGE = "Terminal ready. Ask me anything.";
 
@@ -46,7 +51,7 @@ const SCRIPT: { match: RegExp; reply: Reply }[] = [
   {
     match: /work|compan|client|employ|job|team/i,
     reply: {
-      answer: "Doing design and code for Superpower, Kalshi, Snaptrude, Morphic, Dash0, and Opral.",
+      answer: `Doing design and code for ${WORK_LIST}.`,
       followups: ["What has he built?", "What's his tech stack?", "How can I reach him?"],
     },
   },

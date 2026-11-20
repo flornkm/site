@@ -61,7 +61,7 @@ function ContactPage() {
           ))}
         </ul>
         <Body1 className="mt-12 text-tertiary">
-          I am Florian Kiem, a design engineer building software products — currently based in
+          I am Florian Kiem, a designer and engineer building software products — currently based in
           Dubai, working with teams worldwide. Postal details are on the{" "}
           <Link href="/imprint" className="underline underline-offset-2">
             imprint
