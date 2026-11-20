@@ -221,7 +221,7 @@ function WritingDetailPage() {
             </Link>
           </div>
           <header className="mb-8 md:-mt-7 md:mb-10">
-            <H1 className="text-sm">{item.title}</H1>
+            <H1>{item.title}</H1>
             <HeaderDate type={item.type} date={item.date} newestRunDate={item.newestRunDate} />
           </header>
           <div className="pb-16 md:pb-24">
