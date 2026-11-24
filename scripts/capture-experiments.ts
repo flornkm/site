@@ -68,7 +68,13 @@ const SLUGS: Record<string, number> = {
   "liquid-glass": 2500, // WebGL boot + the type raster waits on document.fonts.ready
   "slop-ninja": 2500, // WebGL boot + textures load + the menu prop pops in
   "tiny-objects": 2000, // eight WebGL contexts boot and draw their first frame
+  "glass-ball": 2500, // WebGL boot + the word strip waits on the Wagram font
 };
+
+// Slugs that never stop moving on their own. Reduced motion holds them on their opening
+// frame, so the poster is the same composition every run instead of wherever a timer
+// happened to land.
+const STILL = new Set<string>(["glass-ball"]);
 
 // Optionally restrict to a subset, e.g. CAPTURE_ONLY=copy,paste-editor
 const ONLY = process.env.CAPTURE_ONLY?.split(",")
@@ -167,6 +173,7 @@ async function captureScheme(scheme: "light" | "dark", suffix: string) {
     if (ONLY && !ONLY.includes(slug)) continue;
     const page = await context.newPage();
     try {
+      if (STILL.has(slug)) await page.emulateMedia({ reducedMotion: "reduce" });
       await page.goto(`${BASE}/experiments?demo=${slug}`, { waitUntil: "networkidle" });
       const dialog = page.locator('[data-experiment-tile="open"]');
       await dialog.waitFor({ state: "visible", timeout: 15000 });
@@ -202,6 +209,11 @@ async function captureScheme(scheme: "light" | "dark", suffix: string) {
         // drawer carry the same label, so a querySelector could match one of those and
         // leave the tile's own close button sitting in the poster.
         for (const c of document.querySelectorAll<HTMLElement>('[aria-label="Close"]'))
+          c.style.display = "none";
+        // The dev-only "open alone" corner button is page chrome, not part of the demo.
+        for (const c of document.querySelectorAll<HTMLElement>(
+          '[aria-label="Open alone in a new tab"]',
+        ))
           c.style.display = "none";
         // Credit footnotes belong in the live demo, not the poster thumbnail.
         for (const c of document.querySelectorAll<HTMLElement>("[data-node-credit]"))
