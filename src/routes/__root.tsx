@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute, useMatches } from "@tanstack/react-router";
 import { Analytics } from "@vercel/analytics/react";
 import { MotionConfig } from "motion/react";
 
@@ -106,6 +106,9 @@ export const Route = createRootRoute({
 });
 
 function RootLayout() {
+  // Bare routes (the gift cards) render full-bleed, without the site chrome.
+  const bare = useMatches({ select: (matches) => matches.some((match) => match.staticData.bare) });
+
   return (
     <html lang="en">
       <head>
@@ -133,11 +136,17 @@ function RootLayout() {
               gated per component via useReducedMotion. */}
           <MotionConfig reducedMotion="user">
             <TooltipProvider>
-              <Navigation />
-              <main className="mx-auto w-full max-w-[2560px] min-h-screen px-6 pt-4 pb-16">
+              {bare ? (
                 <Outlet />
-              </main>
-              <Footer />
+              ) : (
+                <>
+                  <Navigation />
+                  <main className="mx-auto w-full max-w-[2560px] min-h-screen px-6 pt-4 pb-16">
+                    <Outlet />
+                  </main>
+                  <Footer />
+                </>
+              )}
             </TooltipProvider>
           </MotionConfig>
         </QueryClientProvider>

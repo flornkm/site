@@ -39,6 +39,13 @@
       "headers": [{ "key": "tdm-reservation", "value": "1" }]
     },
     {
+      "source": "/christmas-:year(\\d{4})/:path*",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive, nosnippet, noimageindex" },
+        { "key": "Referrer-Policy", "value": "no-referrer" }
+      ]
+    },
+    {
       "source": "/api/(.*)",
       "headers": [
         { "key": "Vary", "value": "Origin" },

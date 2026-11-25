@@ -5,6 +5,7 @@
     "preview": "vercel dev",
     "build": "bun scripts/build-image-manifest.ts && bun scripts/build-video-manifest.ts && bun scripts/build-experiment-og.ts && bun scripts/build-sitemap.ts && bun scripts/build-markdown.ts && vite build",
     "manifests": "bun scripts/build-image-manifest.ts && bun scripts/build-video-manifest.ts && bun scripts/build-experiment-og.ts && bun scripts/build-markdown.ts",
+    "gifts:seal": "bun scripts/seal-gifts.ts",
     "test": "bun test src scripts",
     "start": "vite preview",
     "typecheck": "tsc --noEmit",
