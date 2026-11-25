@@ -1,4 +1,5 @@
 import { GiftPage } from "@/features/gifts/components/gift-page";
+import { previewVersion } from "@/features/gifts/lib/preview-version";
 import { getSealedGift } from "@/features/gifts/lib/sealed-gifts";
 import { absoluteUrl } from "@/lib/site";
 import { createFileRoute, notFound } from "@tanstack/react-router";
@@ -17,7 +18,8 @@ export const Route = createFileRoute("/christmas-2026/$id")({
   // index: the link is the only way in. vercel.json sends the same as an X-Robots-Tag.
   head: ({ loaderData, params }) => {
     const title = loaderData?.cover.title ?? "A little something";
-    const image = absoluteUrl(`/api/gift-preview?c=${COLLECTION}&id=${params.id}`);
+    const version = loaderData ? `&v=${previewVersion(loaderData.cover)}` : "";
+    const image = absoluteUrl(`/api/gift-preview?c=${COLLECTION}&id=${params.id}${version}`);
     const description = "A little something. Open it with the password you were given.";
     return {
       meta: [

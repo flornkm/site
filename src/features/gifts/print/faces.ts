@@ -1,9 +1,9 @@
 import {
   SERIF,
-  TILE,
   createSheet,
   finishSheet,
   luminance,
+  typeSize,
   type PaperAssets,
 } from "@/features/gifts/print/paper";
 import type { GiftCover } from "@/features/gifts/lib/seal";
@@ -17,9 +17,6 @@ import type { Gift } from "@/features/gifts/types";
 export type FaceSize = { w: number; h: number; scale: number; ring: string };
 
 const LABEL_ALPHA = 0.55;
-
-// The one text size: 3% of the card's width, never under 11px on screen.
-const typeSize = (w: number) => Math.max(11, (3 * w) / 100);
 
 // Six columns inside a margin, on a baseline grid of the text size. Positions are in CSS px
 // of the face.
@@ -108,30 +105,20 @@ function setType(ctx: CanvasRenderingContext2D, size: number, cover: GiftCover) 
   ctx.shadowOffsetY = size * 0.04 * scale;
 }
 
-// The link preview prints the title larger (it's seen small in a chat) and centred in its
-// frame rather than on the card, which runs off the bottom there, and the paper's grain
-// larger, as a close-up of the card would show it.
-export type FrontOptions = { titleScale?: number; titleCentre?: number; grain?: number };
-
-export function drawFront(
-  cover: GiftCover,
-  face: FaceSize,
-  assets: PaperAssets,
-  { titleScale = 1, titleCentre, grain = 1 }: FrontOptions = {},
-) {
+export function drawFront(cover: GiftCover, face: FaceSize, assets: PaperAssets) {
   const { w, h } = face;
   const sheet = createSheet(w, h, face.scale, cover.paper);
   const { ctx } = sheet;
-  const size = typeSize(w) * titleScale;
+  const size = typeSize(w);
   setType(ctx, size, cover);
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   const lines = wrap(ctx, cover.title, w * 0.84);
   const leading = size * 1.05;
   lines.forEach((line, index) => {
-    ctx.fillText(line, w / 2, (titleCentre ?? h / 2) + (index - (lines.length - 1) / 2) * leading);
+    ctx.fillText(line, w / 2, h / 2 + (index - (lines.length - 1) / 2) * leading);
   });
-  finishSheet(sheet, cover.paper, 0, assets, TILE * grain);
+  finishSheet(sheet, cover.paper, 0, assets);
   ring(ctx, face);
   return sheet.canvas;
 }

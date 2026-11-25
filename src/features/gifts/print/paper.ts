@@ -10,6 +10,9 @@ export const TILE = 768;
 
 export const SERIF = 'Wagram, Georgia, "Times New Roman", serif';
 
+// The one text size on a card `w` CSS px wide: 3% of its width, never under 11px on screen.
+export const typeSize = (w: number) => Math.max(11, (3 * w) / 100);
+
 export type PaperAssets = {
   tone: HTMLImageElement;
   fine: HTMLImageElement;
@@ -53,7 +56,7 @@ export function luminance(hex: string): number {
 // (against a scan of dyed uncoated stock) would leave pale stock flat. Compensate only
 // partly: good white paper shows far less texture than coloured board. Flecks fade on
 // pale stock, where they'd read as hairs.
-function strength(hex: string) {
+export function paperStrength(hex: string) {
   const l = luminance(hex);
   return {
     pale: l > 0.6,
@@ -74,22 +77,16 @@ export function createSheet(w: number, h: number, scale: number, paper: string):
 }
 
 // Tone in soft-light, flecks in multiply, over everything printed, so the ink sits in the
-// paper. `side` shifts the tile so front and back don't show the same fibres; `tile` is how
-// many CSS px one repeat of the texture covers.
-export function finishSheet(
-  sheet: Sheet,
-  paper: string,
-  side: number,
-  assets: PaperAssets,
-  tile = TILE,
-) {
+// paper. `side` shifts the tile so front and back don't show the same fibres.
+export function finishSheet(sheet: Sheet, paper: string, side: number, assets: PaperAssets) {
+  const tile = TILE;
   const { ctx, w, h } = sheet;
   // The texture fills must never pick up a text shadow left set by whatever was printed.
   ctx.shadowColor = "transparent";
   ctx.shadowBlur = 0;
   ctx.shadowOffsetX = 0;
   ctx.shadowOffsetY = 0;
-  const { pale, tone, flecks } = strength(paper);
+  const { pale, tone, flecks } = paperStrength(paper);
   const transform = new DOMMatrix()
     .translate((side * 197) % tile, (side * 331) % tile)
     .scale(tile / assets.tone.naturalWidth);

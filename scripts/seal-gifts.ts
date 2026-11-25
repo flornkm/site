@@ -1,8 +1,8 @@
 // Seals every plaintext gift in /gifts/<collection>/<id>.json (gitignored) and uploads
 // the ciphertext, plus the cover's colours and title, to Firebase at
-// gifts/<collection>/<id>, where the gift route reads it. Each gift's link preview is
-// rendered too, uploaded to giftPreviews/<collection>/<id> (served by api/gift-preview.ts)
-// and saved beside its source as <id>.preview.jpg.
+// gifts/<collection>/<id>, where the gift route reads it. The link preview is drawn on
+// request from that front (api/gift-preview.ts); the same renderer saves a copy beside
+// each source as <id>.preview.jpg, to look at before sending.
 // Each collection is replaced as a whole, so deleting a source file takes its gift down.
 // A gift without a password gets a generated one written back into its source file.
 //
@@ -12,7 +12,7 @@ import path from "node:path";
 import { z } from "zod";
 import { db } from "../api/utils/_firebase";
 import { seal, type StoredGift } from "../src/features/gifts/lib/seal";
-import { renderPreviews, savePreview } from "./gifts/render-previews";
+import { renderGiftPreview } from "../api/utils/_gift-preview";
 
 const ROOT = path.resolve(import.meta.dirname!, "..");
 const SOURCE = path.join(ROOT, "gifts");
@@ -92,14 +92,14 @@ for (const collection of fs.readdirSync(SOURCE, { withFileTypes: true })) {
 
   await db.ref(`gifts/${collection.name}`).set(sealedGifts);
 
-  const ids = Object.keys(sealedGifts);
-  const images = await renderPreviews(ids.map((id) => sealedGifts[id].cover));
-  const previews: Record<string, string> = {};
-  ids.forEach((id, index) => {
-    previews[id] = images[index].toString("base64");
-    console.log(`preview ${savePreview(collection.name, id, images[index])}`);
-  });
-  await db.ref(`giftPreviews/${collection.name}`).set(previews);
+  for (const [id, { cover }] of Object.entries(sealedGifts)) {
+    const image = await renderGiftPreview(cover, (name) =>
+      fs.promises.readFile(path.join(ROOT, "public/textures/gifts", `paper-${name}.webp`)),
+    );
+    const file = path.join(SOURCE, collection.name, `${id}.preview.jpg`);
+    fs.writeFileSync(file, image);
+    console.log(`preview ${path.relative(ROOT, file)}`);
+  }
 }
 console.log(`${count} gift(s) sealed and uploaded.`);
 // The Admin SDK holds its connection open; nothing else is pending.
