@@ -19,3 +19,6 @@ vite.config.ts.timestamp*
 
 # Generated sitemap (rebuilt by scripts/build-sitemap.ts)
 /public/sitemap.xml
+
+# Gift sources: plaintext + passwords, never commit (scripts/seal-gifts.ts)
+/gifts

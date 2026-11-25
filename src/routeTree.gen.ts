@@ -18,6 +18,7 @@ import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as KruemelRouteImport } from './routes/kruemel'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as SitemapRouteImport } from './routes/sitemap'
+import { Route as Christmas2026IdRouteImport } from './routes/christmas-2026/$id'
 import { Route as WritingIndexRouteImport } from './routes/writing/index'
 import { Route as WritingIdRouteImport } from './routes/writing/$id'
 
@@ -66,6 +67,11 @@ const SitemapRoute = SitemapRouteImport.update({
   path: '/sitemap',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Christmas2026IdRoute = Christmas2026IdRouteImport.update({
+  id: '/christmas-2026/$id',
+  path: '/christmas-2026/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WritingIndexRoute = WritingIndexRouteImport.update({
   id: '/writing/',
   path: '/writing/',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/kruemel': typeof KruemelRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/sitemap': typeof SitemapRoute
+  '/christmas-2026/$id': typeof Christmas2026IdRoute
   '/writing/$id': typeof WritingIdRoute
   '/writing/': typeof WritingIndexRoute
 }
@@ -100,6 +107,7 @@ export interface FileRoutesByTo {
   '/kruemel': typeof KruemelRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/sitemap': typeof SitemapRoute
+  '/christmas-2026/$id': typeof Christmas2026IdRoute
   '/writing/$id': typeof WritingIdRoute
   '/writing': typeof WritingIndexRoute
 }
@@ -114,6 +122,7 @@ export interface FileRoutesById {
   '/kruemel': typeof KruemelRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/sitemap': typeof SitemapRoute
+  '/christmas-2026/$id': typeof Christmas2026IdRoute
   '/writing/$id': typeof WritingIdRoute
   '/writing/': typeof WritingIndexRoute
 }
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
     | '/kruemel'
     | '/privacy-policy'
     | '/sitemap'
+    | '/christmas-2026/$id'
     | '/writing/$id'
     | '/writing/'
   fileRoutesByTo: FileRoutesByTo
@@ -142,6 +152,7 @@ export interface FileRouteTypes {
     | '/kruemel'
     | '/privacy-policy'
     | '/sitemap'
+    | '/christmas-2026/$id'
     | '/writing/$id'
     | '/writing'
   id:
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/kruemel'
     | '/privacy-policy'
     | '/sitemap'
+    | '/christmas-2026/$id'
     | '/writing/$id'
     | '/writing/'
   fileRoutesById: FileRoutesById
@@ -169,6 +181,7 @@ export interface RootRouteChildren {
   KruemelRoute: typeof KruemelRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   SitemapRoute: typeof SitemapRoute
+  Christmas2026IdRoute: typeof Christmas2026IdRoute
   WritingIdRoute: typeof WritingIdRoute
   WritingIndexRoute: typeof WritingIndexRoute
 }
@@ -238,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/christmas-2026/$id': {
+      id: '/christmas-2026/$id'
+      path: '/christmas-2026/$id'
+      fullPath: '/christmas-2026/$id'
+      preLoaderRoute: typeof Christmas2026IdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/writing/': {
       id: '/writing/'
       path: '/writing'
@@ -265,6 +285,7 @@ const rootRouteChildren: RootRouteChildren = {
   KruemelRoute: KruemelRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   SitemapRoute: SitemapRoute,
+  Christmas2026IdRoute: Christmas2026IdRoute,
   WritingIdRoute: WritingIdRoute,
   WritingIndexRoute: WritingIndexRoute,
 }

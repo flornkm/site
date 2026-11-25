@@ -3,7 +3,8 @@
   "buildCommand": "bun run build",
   "outputDirectory": ".output",
   "functions": {
-    "api/runs/sync.ts": { "maxDuration": 300 }
+    "api/runs/sync.ts": { "maxDuration": 300 },
+    "api/gift-preview.ts": { "includeFiles": "public/textures/gifts/**" }
   },
   "crons": [{ "path": "/api/runs/sync", "schedule": "0 4 * * *" }],
   "redirects": [
@@ -37,6 +38,13 @@
     {
       "source": "/(.*)",
       "headers": [{ "key": "tdm-reservation", "value": "1" }]
+    },
+    {
+      "source": "/christmas-:year(\\d{4})/:path*",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive, nosnippet, noimageindex" },
+        { "key": "Referrer-Policy", "value": "no-referrer" }
+      ]
     },
     {
       "source": "/api/(.*)",
